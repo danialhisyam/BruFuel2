@@ -18,8 +18,6 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to {opacity:1; transform:translateY(0);} }
-
-    /* Modal styles */
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);
       justify-content: center; align-items: center; z-index: 50; }
     .modal.show { display: flex; animation: fadeIn 0.3s ease-in-out; }
@@ -35,9 +33,15 @@
         <i data-feather="truck" class="w-6 h-6 text-blue-600"></i>
         <h1 class="text-lg md:text-xl font-semibold text-gray-800 tracking-tight">BruFuel Driver Portal</h1>
       </div>
-      <a href="login.html" class="text-blue-600 font-medium border border-blue-100 px-4 py-2 rounded-lg hover:bg-blue-50 transition">
-        Logout
-      </a>
+
+      <!-- ✅ Proper Laravel logout -->
+      <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit"
+          class="text-blue-600 font-medium border border-blue-100 px-4 py-2 rounded-lg hover:bg-blue-50 transition">
+          Logout
+        </button>
+      </form>
     </div>
   </header>
 
@@ -48,7 +52,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 justify-center">
 
       <!-- View Trips -->
-      <a href="trips.html" class="block">
+      <a href="{{ route('driver.trips') }}" class="block">
         <div class="card bg-white rounded-2xl p-8 text-center border border-gray-100 shadow-sm hover:shadow-md">
           <div class="flex justify-center mb-5">
             <div class="bg-blue-50 p-4 rounded-full">
@@ -64,7 +68,7 @@
       </a>
 
       <!-- Transactions -->
-      <a href="transactions.html" class="block">
+      <a href="{{ route('driver.transactions') }}" class="block">
         <div class="card bg-white rounded-2xl p-8 text-center border border-gray-100 shadow-sm hover:shadow-md">
           <div class="flex justify-center mb-5">
             <div class="bg-green-50 p-4 rounded-full">
@@ -199,7 +203,6 @@
   <script>
     feather.replace();
 
-    // Tab switch
     function openTab(evt, tabName) {
       const tabs = document.querySelectorAll('.tab-btn');
       const contents = document.querySelectorAll('.tab-content');
@@ -211,7 +214,6 @@
       document.getElementById(tabName).classList.add('active');
     }
 
-    // Modal toggle
     function toggleModal(show) {
       const modal = document.getElementById('accountModal');
       modal.classList.toggle('show', show);
@@ -219,3 +221,4 @@
   </script>
 </body>
 </html>
+
