@@ -22,6 +22,7 @@ class RoleSeeder extends Seeder
         User::where('email', 'driver@brufuel.com')->first()?->assignRole('driver');
         User::where('email', 'driver2@brufuel.com')->first()?->assignRole('driver');
         User::where('email', 'customer@brufuel.com')->first()?->assignRole('customer');
+        User::where('email', 'hafiz123@brufueladmin.com')->first()?->assignRole('admin'); 
 
         // 3️⃣ (Optional) Just for confirmation in terminal
         $this->command->info('✅ Roles and permissions assigned successfully!');
