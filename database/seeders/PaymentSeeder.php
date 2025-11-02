@@ -10,7 +10,7 @@ class PaymentSeeder extends Seeder
     public function run(): void
     {
         // Bulk fake data
-        Payment::factory()->count(300)->create();
+        Payment::factory()->count(50)->create();
 
         // A few familiar rows like your UI examples
         $examples = [
