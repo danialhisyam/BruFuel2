@@ -4,9 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BruFuel Registration</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
   <style>
     .gradient-bg { background: linear-gradient(135deg, #0d1117 0%, #111827 100%); }
     .input-focus:focus { box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4); }
@@ -18,14 +20,14 @@
        style="background: linear-gradient(135deg, #151b29ff 0%, #040e23c7 100%);"
        data-aos="fade-up" data-aos-duration="800">
 
+    <!-- Header -->
     <div class="text-center mb-8">
-      <div class="relative mx-auto w-20 h-20 rounded-full flex items-center justify-center overflow-hidden">
-        <img src="{{ asset('images/logo4.jpg') }}" 
-      </div>
+      <img src="{{ asset('images/logook.jpg') }}" class="mx-auto w-24 h-24 object-contain mb-4" alt="BruFuel Logo">
       <h1 class="text-3xl font-bold text-white">BruFuel</h1>
       <p class="text-gray-300 mt-2">Create a new account</p>
     </div>
 
+    <!-- ✅ Laravel Fortify Registration Form -->
     <form method="POST" action="{{ route('register') }}" class="space-y-6">
       @csrf
 

@@ -10,13 +10,8 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
   <style>
-    .gradient-bg {
-      background: linear-gradient(135deg, #0d1117 0%, #111827 100%);
-    }
-    .input-focus:focus {
-      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
-    }
-    html, body { height: 100%; }
+    .gradient-bg { background: linear-gradient(135deg, #0d1117 0%, #111827 100%); }
+    .input-focus:focus { box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4); }
   </style>
 </head>
 
@@ -27,13 +22,9 @@
 
     <!-- Header -->
     <div class="text-center mb-8">
-      <div class="relative mx-auto w-20 h-20 rounded-full flex items-center justify-center overflow-hidden">
-        <img src="{{ asset('images/logo4.jpg') }}" 
-             alt="BruFuel Logo" 
-             class="w-full h-full object-contain scale-1000" />
-      </div>
-      <h1 class="text-3xl font-bold text-white mt-4">BruFuel</h1>
-      <p class="text-gray-300 mt-1">Sign in to your account</p>
+      <img src="{{ asset('images/logook.jpg') }}" class="mx-auto w-24 h-24 object-contain mb-4" alt="BruFuel Logo">
+      <h1 class="text-3xl font-bold text-white">BruFuel</h1>
+      <p class="text-gray-300 mt-2">Sign in to your account</p>
     </div>
 
     <!-- ✅ Laravel Fortify Login Form -->
