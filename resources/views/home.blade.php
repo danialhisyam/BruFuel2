@@ -137,202 +137,224 @@
       onmousedown="this.style.transform='scale(1.1)'" onmouseup="this.style.transform='scale(1)'"
       onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
       ontouchend="this.style.transform='scale(1)'"
-      onclick="window.location.href='{{ route('menu') }}'">>
+      onclick="window.location.href='{{ route('menu') }}'">
   </div>
 
-  <!--------------------------------------------------------------------------
-  | POPUP
-  |-------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------  
+| POPUP  
+|-------------------------------------------------------------------------->  
 
-  <div id="loginPopup" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden justify-center items-center z-50 transition-opacity duration-300 opacity-0">
-    <div id="popupBox" class="relative w-68 h-72 bg-slate-950 rounded-3xl flex flex-col items-center justify-between p-4 transform translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]">
-      <img src="{{ asset('dimages/dashboardbutton.png') }}" alt="Logo" class="w-44 h-12 mt-4" />
+<div id="loginPopup" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden justify-center items-center z-50 transition-opacity duration-300 opacity-0">
+  <div id="popupBox" class="relative w-68 h-72 bg-slate-950 rounded-3xl flex flex-col items-center justify-between p-4 transform translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]">
+    <img src="{{ asset('dimages/dashboardbutton.png') }}" alt="Logo" class="w-44 h-12 mt-4" />
 
-      <!-- Initial State -->
-      <div id="initialState" class="w-56">
-        <div class="text-white text-xl font-bold font-[Poppins] mt-1 text-left leading-tight">No account yet?</div>
-        <p class="text-white/60 text-xs font-normal font-[Poppins] text-left leading-snug mt-2">
-          Uh-oh! It looks like you're not logged in to proceed with this action.
-          Log in or sign up to access all available features.
-        </p>
+    <!-- Initial State -->
+    <div id="initialState" class="w-56">
+      <div class="text-white text-xl font-bold font-[Poppins] mt-1 text-left leading-tight">No account yet?</div>
+      <p class="text-white/60 text-xs font-normal font-[Poppins] text-left leading-snug mt-2">
+        Uh-oh! It looks like you're not logged in to proceed with this action.
+        Log in or sign up to access all available features.
+      </p>
+    </div>
+
+    <!-- Login State -->
+        <div id="loginState" class="w-56 hidden relative">
+          <!-- Email Input -->
+          <div class="relative mb-3 -mt-0">
+            <input type="email" id="emailInput"
+              class="credential-input w-full h-11 bg-[rgba(217,217,217,0.10)] rounded-[15px] border border-transparent px-4 text-gray-400 text-base font-[Poppins] font-normal focus:outline-none focus:border-gray-500 transition-colors placeholder-gray-400"
+              placeholder="Email" autocomplete="email" />
+          </div>
+
+          <!-- Password Input -->
+          <div class="relative -mt-2">
+            <input type="password" id="passwordInput"
+              class="credential-input w-full h-11 bg-[rgba(217,217,217,0.10)] rounded-[15px] border border-transparent px-4 text-gray-400 text-base font-[Poppins] font-normal focus:outline-none focus:border-gray-500 transition-colors placeholder-gray-400"
+              placeholder="Password" autocomplete="current-password" />
+          </div>
+
+      <!-- Sign Up Text Button (hidden by default, one line, no layout shift) -->
+      <div id="signupButton"
+        style="
+          width: 100%;
+          text-align: center;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 4px;
+          margin-top: 8px;
+          margin-left: 25px;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.3s ease, transform 0.15s ease;
+        "
+        onmousedown="this.style.transform='scale(1.1)'"
+        onmouseup="this.style.transform='scale(1)'"
+        onmouseleave="this.style.transform='scale(1)'"
+        ontouchstart="this.style.transform='scale(1.1)'"
+        ontouchend="this.style.transform='scale(1)'"
+        onclick="window.location.href='{{ route('signup') }}'">
+        <span style="color: #FFE100; font-size: 9px; font-family: Poppins; font-weight: 500;">
+          Don’t have an account yet?
+        </span>
+        <span style="color: #FFE100; font-size: 9px; font-family: Poppins; font-weight: 400; text-decoration: underline;">
+          Sign Up
+        </span>
       </div>
+    </div>
 
- <!-- Login State -->
-<div id="loginState" class="w-56 hidden relative">
-  <!-- Email Input -->
-  <div class="relative mb-3 -mt-0">
-    <input type="email" id="emailInput"
-      class="credential-input w-full h-11 bg-[rgba(217,217,217,0.10)] rounded-[15px] border border-transparent px-4 text-gray-400 text-base font-[Poppins] font-semibold focus:outline-none focus:border-gray-500 transition-colors placeholder-gray-400"
-      placeholder="Email" autocomplete="email" />
-  </div>
-
-  <!-- Password Input -->
-  <div class="relative -mt-2">
-    <input type="password" id="passwordInput"
-      class="credential-input w-full h-11 bg-[rgba(217,217,217,0.10)] rounded-[15px] border border-transparent px-4 text-gray-400 text-base font-[Poppins] font-semibold focus:outline-none focus:border-gray-500 transition-colors placeholder-gray-400"
-      placeholder="Password" autocomplete="current-password" />
-  </div>
-
-  <!-- Sign Up Text Button (hidden by default, one line, no layout shift) -->
-  <div id="signupButton"
-    style="
-      width: 100%;
-      text-align: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 4px;
-      margin-top: 8px;
-      margin-left: 25px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease, transform 0.15s ease;
-    "
-    onmousedown="this.style.transform='scale(1.1)'"
-    onmouseup="this.style.transform='scale(1)'"
-    onmouseleave="this.style.transform='scale(1)'"
-    ontouchstart="this.style.transform='scale(1.1)'"
-    ontouchend="this.style.transform='scale(1)'">
-    <span style="color: #FFE100; font-size: 9px; font-family: Poppins; font-weight: 500;">
-      Don’t have an account yet?
-    </span>
-    <span style="color: #FFE100; font-size: 9px; font-family: Poppins; font-weight: 400; text-decoration: underline;">
-      Sign Up
-    </span>
+    <!-- Continue/Login Button -->
+    <div class="w-56 h-10 bg-[#760000] rounded-[33px] flex justify-center items-center cursor-pointer hover:scale-[1.03] transition"
+      id="actionButton">
+      <span class="text-white text-base font-bold font-[Poppins]">CONTINUE</span>
+    </div>
   </div>
 </div>
 
-<!-- Continue/Login Button -->
-<div class="w-56 h-10 bg-[#760000] rounded-[33px] flex justify-center items-center cursor-pointer hover:scale-[1.03] transition"
-  id="actionButton">
-  <span class="text-white text-base font-bold font-[Poppins]">CONTINUE</span>
-</div>
+<!--------------------------------------------------------------------------  
+| POPUP   
+|-------------------------------------------------------------------------->  
 
-  <style>
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus,
-    input:-webkit-autofill:active {
-      -webkit-box-shadow: 0 0 0px 1000px rgba(217,217,217,0.10) inset !important;
-      -webkit-text-fill-color: #ffffff !important;
-      caret-color: #ffffff !important;
-      transition: background-color 9999s ease-in-out 0s !important;
-    }
+<style>
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0px 1000px rgba(217, 217, 217, 0) inset !important;
+    -webkit-text-fill-color: #ffffff !important;
+    caret-color: #ffffff !important;
+    transition: background-color 9999s ease-in-out 0s !important;
+  }
 
-    /* Default gray placeholder text */
-    .credential-input {
-      color: #9ca3af;
-      -webkit-text-fill-color: rgba(255,255,255,0.14);
-    }
+  /* Default gray placeholder text */
+  .credential-input {
+    color: #9ca3af;
+    -webkit-text-fill-color: rgba(255,255,255,0.14);
+  }
 
-    /* When user types something */
-    .credential-input.has-text {
-      color: #ffffff !important;
-      -webkit-text-fill-color: #ffffff !important;
-    }
-  </style>
+  /* When user types something */
+  .credential-input.has-text {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
 
-  <!--------------------------------------------------------------------------
-  | POPUP SCRIPT
-  |-------------------------------------------------------------------------->
+  .credential-input {
+  font-size: 0.875rem !important; /* small */
+  font-weight: 500 !important;    /* medium boldness */
+}
+</style>
 
-  <script>
-    function updateInputColors() {
-      document.querySelectorAll('.credential-input').forEach(input => {
-        if (input.value.trim() !== "") {
-     du     input.classList.add('has-text');
-        } else {
-          input.classList.remove('has-text');
-        }
-      });
-    }
+<!--------------------------------------------------------------------------  
+| POPUP SCRIPT  
+|-------------------------------------------------------------------------->  
 
+<script>
+  function updateInputColors() {
     document.querySelectorAll('.credential-input').forEach(input => {
-      input.addEventListener('input', updateInputColors);
+      if (input.value.trim() !== "") {
+        input.classList.add('has-text');
+      } else {
+        input.classList.remove('has-text');
+      }
     });
+  }
 
-    window.addEventListener('load', () => {
-      setTimeout(updateInputColors, 300);
-    });
-  </script>
+  document.querySelectorAll('.credential-input').forEach(input => {
+    input.addEventListener('input', updateInputColors);
+  });
 
-  <script>
-    const popup = document.getElementById('loginPopup'),
-          box = document.getElementById('popupBox'),
-          initialState = document.getElementById('initialState'),
-          loginState = document.getElementById('loginState'),
-          actionButton = document.getElementById('actionButton'),
-          emailInput = document.getElementById('emailInput'),
-          passwordInput = document.getElementById('passwordInput');
+  window.addEventListener('load', () => {
+    setTimeout(updateInputColors, 300);
+  });
+</script>
 
-    function toggleLoginPopup(show) {
-      if (show) {
+<script>
+  const popup = document.getElementById('loginPopup'),
+        box = document.getElementById('popupBox'),
+        initialState = document.getElementById('initialState'),
+        loginState = document.getElementById('loginState'),
+        actionButton = document.getElementById('actionButton'),
+        emailInput = document.getElementById('emailInput'),
+        passwordInput = document.getElementById('passwordInput');
+
+  function toggleLoginPopup(show) {
+    if (show) {
+      resetToInitialState();
+      popup.style.display = 'flex';
+      requestAnimationFrame(() => {
+        popup.classList.remove('opacity-0');
+        popup.classList.add('opacity-100');
+        box.classList.remove('translate-y-full');
+        box.classList.add('translate-y-0');
+      });
+    } else {
+      popup.classList.remove('opacity-100');
+      popup.classList.add('opacity-0');
+      box.classList.remove('translate-y-0');
+      box.classList.add('translate-y-full');
+      setTimeout(() => {
+        popup.style.display = 'none';
         resetToInitialState();
-        popup.style.display = 'flex';
-        requestAnimationFrame(() => {
-          popup.classList.remove('opacity-0');
-          popup.classList.add('opacity-100');
-          box.classList.remove('translate-y-full');
-          box.classList.add('translate-y-0');
-        });
+      }, 500);
+    }
+  }
+
+  function resetToInitialState() {
+    initialState.classList.remove('hidden');
+    loginState.classList.add('hidden');
+    emailInput.value = '';
+    passwordInput.value = '';
+    document.querySelectorAll('.credential-input').forEach(i => i.classList.remove('has-text'));
+    actionButton.style.backgroundColor = '#760000';
+    actionButton.style.pointerEvents = 'auto';
+    actionButton.innerHTML = '<span class="text-white text-base font-bold font-[Poppins]">CONTINUE</span>';
+    actionButton.onclick = switchToLoginForm;
+
+    document.getElementById('signupButton').style.opacity = '0';
+    document.getElementById('signupButton').style.pointerEvents = 'none';
+  }
+
+  function switchToLoginForm() {
+    initialState.classList.add('hidden');
+    loginState.classList.remove('hidden');
+    document.getElementById('signupButton').style.opacity = '1';
+    document.getElementById('signupButton').style.pointerEvents = 'auto';
+    actionButton.style.backgroundColor = '#4B5563';
+    actionButton.style.pointerEvents = 'none';
+    actionButton.innerHTML = '<span class="text-white text-base font-bold font-[Poppins]">LOGIN</span>';
+    actionButton.onclick = null;
+    [emailInput, passwordInput].forEach(i => i.addEventListener('input', checkLoginForm));
+  }
+
+function checkLoginForm() {
+  const e = emailInput.value.trim(),
+        p = passwordInput.value.trim(),
+        v = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+
+  if (v && p.length > 0) {
+    actionButton.style.backgroundColor = '#760000';
+    actionButton.style.pointerEvents = 'auto';
+    actionButton.onclick = () => {
+      if (e.endsWith('@admin.brufuel.bn')) {
+        window.location.href = '{{ route('admin.dashboard') }}';
+      } else if (e.endsWith('@driver.brufuel.bn')) {
+        window.location.href = '{{ route('driver.dashboard') }}';
       } else {
-        popup.classList.remove('opacity-100');
-        popup.classList.add('opacity-0');
-        box.classList.remove('translate-y-0');
-        box.classList.add('translate-y-full');
-        setTimeout(() => {
-          popup.style.display = 'none';
-          resetToInitialState();
-        }, 500);
+        window.location.href = '{{ route('home') }}';
       }
-    }
+    };
+  } else {
+    actionButton.style.backgroundColor = '#4B5563';
+    actionButton.style.pointerEvents = 'none';
+    actionButton.onclick = null;
+  }
+}
 
-    function resetToInitialState() {
-      initialState.classList.remove('hidden');
-      loginState.classList.add('hidden');
-      emailInput.value = '';
-      passwordInput.value = '';
-      document.querySelectorAll('.credential-input').forEach(i => i.classList.remove('has-text'));
-      actionButton.style.backgroundColor = '#760000';
-      actionButton.style.pointerEvents = 'auto';
-      actionButton.innerHTML = '<span class="text-white text-base font-bold font-[Poppins]">CONTINUE</span>';
-      actionButton.onclick = switchToLoginForm;
+  popup.addEventListener('click', e => {
+    if (e.target.id === 'loginPopup') toggleLoginPopup(false);
+  });
+</script>
 
-      document.getElementById('signupButton').style.opacity = '0';
-      document.getElementById('signupButton').style.pointerEvents = 'none';
-    }
-
-    function switchToLoginForm() {
-      initialState.classList.add('hidden');
-      loginState.classList.remove('hidden');
-      document.getElementById('signupButton').style.opacity = '1';
-      document.getElementById('signupButton').style.pointerEvents = 'auto';
-      actionButton.style.backgroundColor = '#4B5563';
-      actionButton.style.pointerEvents = 'none';
-      actionButton.innerHTML = '<span class="text-white text-base font-bold font-[Poppins]">LOGIN</span>';
-      actionButton.onclick = null;
-      [emailInput, passwordInput].forEach(i => i.addEventListener('input', checkLoginForm));
-    }
-
-    function checkLoginForm() {
-      const e = emailInput.value.trim(),
-            p = passwordInput.value.trim(),
-            v = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
-      if (v && p.length > 0) {
-        actionButton.style.backgroundColor = '#760000';
-        actionButton.style.pointerEvents = 'auto';
-        actionButton.onclick = () => { window.location.href = '{{ route('login') }}'; };
-      } else {
-        actionButton.style.backgroundColor = '#4B5563';
-        actionButton.style.pointerEvents = 'none';
-        actionButton.onclick = null;
-      }
-    }
-
-    popup.addEventListener('click', e => {
-      if (e.target.id === 'loginPopup') toggleLoginPopup(false);
-    });
-  </script>
 
 </body>
 </html>
