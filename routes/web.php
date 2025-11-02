@@ -12,38 +12,26 @@ use Livewire\Volt\Volt;
 
 // Redirect the root (/) to /home
 Route::redirect('/', '/home');
-
-// Home page
 Route::view('/home', 'home')->name('home');
 
 // Redirect the root (/) to /history
 Route::redirect('/', '/history');
-
-// History page
 Route::view('/history', 'history')->name('history');
 
 // Redirect the root (/) to /menu
 Route::redirect('/', '/menu');
-
-// menu page
 Route::view('/menu', 'menu')->name('menu');
 
 // Redirect the root (/) to /signup
 Route::redirect('/', '/signup');
-
-// signup page
 Route::view('/signup', 'signup')->name('signup');
 
 // Redirect the root (/) to /admin.dashboardnup
 Route::redirect('/', '/admin.dashboard');
-
-// admin.dashboard page
 Route::view('/admin.dashboard', 'admin.dashboard')->name('admin.dashboard');
 
 // Redirect the root (/) to /driver.dashboardnup
 Route::redirect('/', '/driver.dashboard');
-
-// driver.dashboard page
 Route::view('/driver.dashboard', 'driver.dashboard')->name('driver.dashboard');
 
 
