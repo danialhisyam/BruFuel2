@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 
+Volt::route('/signup', 'auth.signup')->name('signup');
+
+
 /*
 |--------------------------------------------------------------------------
 | Public Routes

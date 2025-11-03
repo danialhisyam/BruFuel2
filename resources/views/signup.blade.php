@@ -24,15 +24,13 @@ public function register(): void {
       'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
       'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
     ]);
+
     $validated['password'] = Hash::make($validated['password']);
-    $user = User::create($validated);
-    
-    // Remove these lines since we're not logging in:
-    // Auth::login($user); 
-    // Session::regenerate();
-    
-    $this->redirect('/login', navigate: true);
-  }
+    User::create($validated);
+
+    // 👇 this is correct — don’t touch it
+    $this->redirect(route('login'), navigate: true);
+}
   };
 
 ?>
@@ -178,7 +176,8 @@ button.enabled:hover{transform:scale(1.03);}
     <div class="form-wrapper">
       <h2>Create an Account</h2>
       <p class="subtitle">Join <strong>BruFuel</strong> and start your journey</p>
-      <form wire:submit="register" id="registerForm">
+       <form method="GET" action="/login" id="registerForm">
+
         @csrf
         <!-- Improved name field with proper autocomplete -->
         <input wire:model="name" 
