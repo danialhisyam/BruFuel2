@@ -79,6 +79,16 @@
             <p class="font-medium">Admin User</p>
             <p class="text-slate-400">Administrator</p>
           </div>
+          @auth
+<form method="POST" action="{{ route('logout') }}" class="inline">
+    @csrf
+    <button type="submit"
+            class="px-3 py-2 rounded-lg bg-red-600/90 hover:bg-red-600 text-white text-sm font-medium">
+        Log out
+    </button>
+</form>
+@endauth
+
         </div>
       </div>
     </aside>

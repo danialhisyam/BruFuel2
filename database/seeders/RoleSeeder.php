@@ -16,16 +16,10 @@ class RoleSeeder extends Seeder
         Role::findOrCreate('customer');
 
         // 2️⃣ Assign roles to existing users by their email
-        User::where('email', 'admin@brufuel.com')->first()?->assignRole('admin');
-        User::where('email', 'admin2@brufuel.com')->first()?->assignRole('admin'); 
-        User::where('email', 'driver3@brufuel.com')->first()?->assignRole('driver');
-        User::where('email', 'driver@brufuel.com')->first()?->assignRole('driver');
-        User::where('email', 'driver2@brufuel.com')->first()?->assignRole('driver');
-        User::where('email', 'customer@brufuel.com')->first()?->assignRole('customer');
-        User::where('email', 'hafiz123@brufueladmin.com')->first()?->assignRole('admin'); 
-        User::where('email', 'danny2911@brufuel.com')->first()?->assignRole('admin'); 
-        User::where('email', 'johndoe@brufuel.com')->first()?->assignRole('admin');
-
+        User::where('email', 'danny@brufuel.admin')->first()?->assignRole('admin');
+        User::where('email', 'danny@brufuel.driver')->first()?->assignRole('driver');
+        User::where('email', 'danny@gmail.com')->first()?->assignRole('customer');
+       
         // 3️⃣ (Optional) Just for confirmation in terminal
         $this->command->info('✅ Roles and permissions assigned successfully!');
     }

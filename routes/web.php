@@ -17,7 +17,7 @@ use App\Livewire\Settings\TwoFactor;
 | NOTE: If you want a custom landing page instead of redirecting to /login,
 | change the first line to: Route::view('/', 'ComapnySelectection')->name('welcome');
 */
-Route::redirect('/', '/mobile/home', 302);
+Route::view('/','/mobile/home')->name('home');
 
 // Fortify custom views MUST be registered before auth routes
 Fortify::loginView(fn () => view('auth.login'));
@@ -49,7 +49,7 @@ Route::get('/redirect-dashboard', function () {
         return redirect()->route('admin.dashboard');
     }
     if ($user->hasRole('driver')) {
-        return redirect()->route('driver.dashboard');
+        return redirect()->route('driver.trips');
     }
     if ($user->hasRole('customer')) {
         return redirect()->route('mobile.home');
@@ -104,7 +104,7 @@ Route::middleware(['auth', 'role:driver'])
     ->prefix('driver')
     ->name('driver.')
     ->group(function () {
-        Route::view('/dashboard', 'driver.dashboard')->name('dashboard');
+        Route::view('/dashboard', 'driver.transactions.index')->name('dashboard');
         Route::view('/trips', 'driver.trips.index')->name('trips');
         Route::view('/transactions', 'driver.transactions.index')->name('transactions');
     });
@@ -169,7 +169,7 @@ Route::prefix('testing')->name('testing.')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::prefix('auth')->name('auth.')->group(function () {
-    Route::view('/login', 'auth.login')->name('login');
+    Route::redirect('/login', 'auth.login')->name('login');
     Route::view('/register', 'auth.register')->name('register');
     Route::view('/forgot-password', 'auth.forgot-password')->name('forgot-password');
 });
