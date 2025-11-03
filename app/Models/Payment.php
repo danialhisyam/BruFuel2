@@ -2,19 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
-    use HasFactory;
-
-    protected $fillable = [
-        'customer_name', 'provider', 'status', 'amount', 'paid_at',
-    ];
-
-    protected $casts = [
-        'paid_at' => 'datetime',
-        'amount'  => 'decimal:2',
-    ];
+    protected $fillable = ['customer_name','provider','status','amount','paid_at'];
+    protected $casts = ['paid_at' => 'datetime'];
 }

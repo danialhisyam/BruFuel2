@@ -190,3 +190,12 @@ Route::get('/force-logout', function () {
 
 // Legacy driver redirects that point to public login or protected dashboard
 Route::redirect('/driver/login.html', '/driver/login', 301);
+
+use App\Http\Controllers\Admin\PaymentController;
+Route::get('/admin/payments', [PaymentController::class, 'index'])->name('admin.payments');
+
+Route::prefix('admin')->group(function () {
+Route::get('/payments', [PaymentController::class, 'index'])->name('admin.payments');
+    Route::get('/payments/export/csv',   [PaymentController::class, 'exportCsv'])->name('admin.payments.export.csv');
+    Route::get('/payments/export/excel', [PaymentController::class, 'exportExcel'])->name('admin.payments.export.excel');
+    });

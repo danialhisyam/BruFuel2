@@ -59,45 +59,13 @@
             onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
             ontouchend="this.style.transform='scale(1)'" onclick="window.location.href='{{ route('mobile.home') }}'">
 
-        {{-- Login / Logout control (top-right) --}}
-@guest
-    <!-- Login icon (guest only) -->
-    <img src="{{ asset('dimages/loginbutton.png') }}" alt="Login" draggable="false"
-         style="width:30px;height:35px;left:371.85px;top:89.97px;position:absolute;cursor:pointer;transition:transform 0.15s ease;"
-         onmousedown="this.style.transform='scale(1.1)'" onmouseup="this.style.transform='scale(1)'"
-         onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
-         ontouchend="this.style.transform='scale(1)'" 
-         onclick="window.location.href='{{ route('login') }}'">
-@endguest
+        <!-- Login button -->
+        <img src="{{ asset('dimages/loginbutton.png') }}" alt="Login Button" draggable="false"
+            style="width:30px;height:35px;left:371.85px;top:89.97px;position:absolute;cursor:pointer;transition:transform 0.15s ease;"
+            onmousedown="this.style.transform='scale(1.1)'" onmouseup="this.style.transform='scale(1)'"
+            onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
+            ontouchend="this.style.transform='scale(1)'">
 
-@auth
-    <!-- Logout button (auth only) -->
-    <form method="POST" action="{{ route('logout') }}" class="inline"
-          style="position:absolute;left:330px;top:86px;">
-        @csrf
-        <button type="submit"
-                style="
-                    padding:6px 12px;
-                    border:none;
-                    border-radius:10px;
-                    background:#dc2626;
-                    color:#fff;
-                    font-family:Poppins, sans-serif;
-                    font-size:12px;
-                    font-weight:600;
-                    cursor:pointer;
-                    box-shadow:0 6px 18px rgba(220,38,38,.25);
-                    transition:transform .15s ease, opacity .15s ease;
-                "
-                onmousedown="this.style.transform='scale(1.05)'" 
-                onmouseup="this.style.transform='scale(1)'" 
-                onmouseleave="this.style.transform='scale(1)'">
-            Log out
-        </button>
-    </form>
-@endauth
-
-                
         <!--------------------------------------------------------------------------
         | TABS
         |-------------------------------------------------------------------------->
@@ -235,13 +203,10 @@
                 </div>
             </div>
 
-                <!-- Continue/Login Button -->
-                <div class="w-56 h-10 bg-[#760000] rounded-[33px] flex justify-center items-center cursor-pointer hover:scale-[1.03] transition"
-                    id="actionButton"
-                    onclick="window.location.href='{{ route('mobile.login') }}'">
-                    <span class="text-white text-base font-bold font-[Poppins]">CONTINUE</span>
-                </div>
-
+            <!-- Continue/Login Button -->
+            <div class="w-56 h-10 bg-[#760000] rounded-[33px] flex justify-center items-center cursor-pointer hover:scale-[1.03] transition"
+                id="actionButton">
+                <span class="text-white text-base font-bold font-[Poppins]">CONTINUE</span>
             </div>
         </div>
     </div>
@@ -375,7 +340,7 @@
                     } else if (e.endsWith('@driver.brufuel.bn')) {
                         window.location.href = '{{ route('driver.dashboard') }}';
                     } else {
-                        window.location.href = '{{ route('mobile.home') }}';
+                        window.location.href = '{{ route('home') }}';
                     }
                 };
             } else {

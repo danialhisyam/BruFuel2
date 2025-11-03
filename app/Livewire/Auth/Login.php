@@ -52,7 +52,13 @@ class Login extends Component
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $redirect = match (true) {
+            Str::endsWith($this->email, '@admin.brufuel.bn') => route('admin.dashboard', absolute: false),
+            Str::endsWith($this->email, '@driver.brufuel.bn') => route('driver.dashboard', absolute: false),
+            default => route('dashboard', absolute: false),
+        };
+
+        $this->redirectIntended(default: $redirect, navigate: true);
     }
 
     /**

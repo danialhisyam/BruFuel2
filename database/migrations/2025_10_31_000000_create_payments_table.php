@@ -7,16 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void {
         Schema::create('payments', function (Blueprint $table) {
-            $table->id(); // this will be your order ID on the page
-            $table->string('customer_name');     // e.g. ADIB, ALYA, etc.
-            $table->enum('provider', ['BIBD', 'BAIDURI', 'TAB', 'CASH']);
-            $table->enum('status', ['Paid', 'Pending', 'Fail'])->index();
-            $table->decimal('amount', 10, 2);    // BND with 2 decimals
-            $table->dateTime('paid_at')->index();// the "date" you show on UI
+            $table->id();
+            $table->string('customer_name');
+            $table->string('provider');      // BIBD/TAP/CASH/BAIDURI
+            $table->string('status');        // Paid/Pending/Fail
+            $table->decimal('amount', 10, 2);
+            $table->timestamp('paid_at')->nullable();
             $table->timestamps();
         });
     }
-    public function down(): void {
-        Schema::dropIfExists('payments');
-    }
+    public function down(): void { Schema::dropIfExists('payments'); }
 };

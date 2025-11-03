@@ -59,44 +59,12 @@
       onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
       ontouchend="this.style.transform='scale(1)'" onclick="window.location.href='{{ route('mobile.home') }}'">
 
-   {{-- Login / Logout control (top-right) --}}
-@guest
-    <!-- Login icon (guest only) -->
-    <img src="{{ asset('dimages/loginbutton.png') }}" alt="Login" draggable="false"
-         style="width:30px;height:35px;left:371.85px;top:89.97px;position:absolute;cursor:pointer;transition:transform 0.15s ease;"
-         onmousedown="this.style.transform='scale(1.1)'" onmouseup="this.style.transform='scale(1)'"
-         onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
-         ontouchend="this.style.transform='scale(1)'" 
-         onclick="window.location.href='{{ route('login') }}'">
-@endguest
-
-@auth
-    <!-- Logout button (auth only) -->
-    <form method="POST" action="{{ route('logout') }}" class="inline"
-          style="position:absolute;left:330px;top:86px;">
-        @csrf
-        <button type="submit"
-                style="
-                    padding:6px 12px;
-                    border:none;
-                    border-radius:10px;
-                    background:#dc2626;
-                    color:#fff;
-                    font-family:Poppins, sans-serif;
-                    font-size:12px;
-                    font-weight:600;
-                    cursor:pointer;
-                    box-shadow:0 6px 18px rgba(220,38,38,.25);
-                    transition:transform .15s ease, opacity .15s ease;
-                "
-                onmousedown="this.style.transform='scale(1.05)'" 
-                onmouseup="this.style.transform='scale(1)'" 
-                onmouseleave="this.style.transform='scale(1)'">
-            Log out
-        </button>
-    </form>
-@endauth
-
+    <!-- Login button -->
+    <img src="{{ asset('dimages/loginbutton.png') }}" alt="Login Button" draggable="false"
+      style="width:30px;height:35px;left:371.85px;top:89.97px;position:absolute;cursor:pointer;transition:transform 0.15s ease;"
+      onmousedown="this.style.transform='scale(1.1)'" onmouseup="this.style.transform='scale(1)'"
+      onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
+      ontouchend="this.style.transform='scale(1)'">
 
     <!--------------------------------------------------------------------------
     | TABS
@@ -118,14 +86,13 @@
       ontouchend="this.style.transform='scale(1)'"
       onclick="window.location.href='{{ route('mobile.history') }}'">
 
-      <!-- Initial State -->
-      <div id="initialState" class="w-56">
-      <div class="text-white text-xl font-bold font-[Poppins] mt-1 text-left leading-tight">No account yet?</div>
-      <p class="text-white/60 text-xs font-normal font-[Poppins] text-left leading-snug mt-2">
-       Uh-oh! It looks like you're not logged in to proceed with this action.
-       Log in or sign up to access all available features.
-      </p>
-      </div>
+    <!-- Menu Tab -->
+    <img src="{{ asset('mimages/menubutton2.png') }}" alt="More Button" draggable="false"
+      style="width:110px;height:50px;left:290px;top:180px;position:absolute;cursor:pointer;transition:transform 0.15s ease;"
+      onmousedown="this.style.transform='scale(1.1)'" onmouseup="this.style.transform='scale(1)'"
+      onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
+      ontouchend="this.style.transform='scale(1)'"
+      onclick="window.location.href='{{ route('mobile.menu') }}'">
 
         <!-- My Profile -->
         <div style="position:absolute;left:24px;top:260px;cursor:pointer;transition:transform 0.15s ease;"
