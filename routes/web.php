@@ -10,47 +10,39 @@ use Livewire\Volt\Volt;
 |--------------------------------------------------------------------------
 */
 
-// Redirect the root (/) to /home
-Route::redirect('/', '/home');
-Route::view('/home', 'home')->name('home');
+// ✅ When visiting root (brufuel.test), go to /home
+Route::redirect('/', '/home');  // LABEL: Redirects to /home
 
-// Redirect the root (/) to /history
-Route::redirect('/', '/history');
-Route::view('/history', 'history')->name('history');
+// Public pages (no login required)
+Route::view('/home', 'home')->name('home');          // LABEL: Goes to resources/views/home.blade.php
+Route::view('/history', 'history')->name('history'); // LABEL: Goes to resources/views/history.blade.php
+Route::view('/menu', 'menu')->name('menu');          // LABEL: Goes to resources/views/menu.blade.php
+Route::view('/signup', 'signup')->name('signup');    // LABEL: Goes to resources/views/signup.blade.php
 
-// Redirect the root (/) to /menu
-Route::redirect('/', '/menu');
-Route::view('/menu', 'menu')->name('menu');
-
-// Redirect the root (/) to /signup
-Route::redirect('/', '/signup');
-Route::view('/signup', 'signup')->name('signup');
-
-// Redirect the root (/) to /admin.dashboardnup
-Route::redirect('/', '/admin.dashboard');
-Route::view('/admin.dashboard', 'admin.dashboard')->name('admin.dashboard');
-
-// Redirect the root (/) to /driver.dashboardnup
-Route::redirect('/', '/driver.dashboard');
-Route::view('/driver.dashboard', 'driver.dashboard')->name('driver.dashboard');
-
+// Custom authentication routes
+Route::view('/login', 'login')->name('login');       // LABEL: Goes to resources/views/login.blade.php
 
 /*
 |--------------------------------------------------------------------------
-| Authenticated Routes
+| Protected Routes (Require Login)
 |--------------------------------------------------------------------------
 */
+Route::middleware(['auth'])->group(function () {
+    // Admin Dashboard
+    Route::view('/admin.dashboard', 'admin.dashboard')->name('admin.dashboard');  // LABEL: Goes to resources/views/admin.dashboard.blade.php
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    // Dashboard
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    // Driver Dashboard
+    Route::view('/driver.dashboard', 'driver.dashboard')->name('driver.dashboard'); // LABEL: Goes to resources/views/driver.dashboard.blade.php
 
-    // Settings redirect and subroutes
-    Route::redirect('/settings', '/settings/profile');
+    // User Dashboard
+    Route::view('/dashboard', 'dashboard')->name('dashboard'); // LABEL: Goes to resources/views/dashboard.blade.php
 
-    Volt::route('/settings/profile', 'settings.profile')->name('profile.edit');
-    Volt::route('/settings/password', 'settings.password')->name('password.edit');
-    Volt::route('/settings/appearance', 'settings.appearance')->name('appearance.edit');
+    // Settings pages
+    Route::redirect('/settings', '/settings/profile'); // LABEL: Redirects to /settings/profile
+
+    Volt::route('/settings/profile', 'settings.profile')->name('profile.edit');     // LABEL: Goes to Livewire Volt component
+    Volt::route('/settings/password', 'settings.password')->name('password.edit');  // LABEL: Goes to Livewire Volt component
+    Volt::route('/settings/appearance', 'settings.appearance')->name('appearance.edit'); // LABEL: Goes to Livewire Volt component
 
     Volt::route('/settings/two-factor', 'settings.two-factor')
         ->middleware(
@@ -61,13 +53,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 []
             )
         )
-        ->name('two-factor.show');
+        ->name('two-factor.show'); // LABEL: Goes to Livewire Volt component
 });
-
-/*
-|--------------------------------------------------------------------------
-| Auth Routes
-|--------------------------------------------------------------------------
-*/
-require __DIR__.'/auth.php';
-
