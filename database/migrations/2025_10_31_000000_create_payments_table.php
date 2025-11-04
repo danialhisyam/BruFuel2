@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->string('customer_name');
             $table->string('provider');      // BIBD/TAP/CASH/BAIDURI
             $table->string('status');        // Paid/Pending/Fail
+    
             $table->decimal('amount', 10, 2);
             $table->timestamp('paid_at')->nullable();
             $table->timestamps();
