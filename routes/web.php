@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\AuthController;
@@ -14,34 +15,33 @@ use App\Http\Controllers\AuthController;
 */
 
 // ✅ Show Login Page
-Route::get('/login', function () {
-    return view('login');
-})->name('login');
+Route::view('/login', 'login')->name('login');
 
-// ✅ Process Login (handled by AuthController)
+// ✅ Process Login (handled by controller)
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
 // ✅ Show Signup Page
 Route::view('/signup', 'signup')->name('signup');
 
-// ✅ Process Signup Form
+// ✅ Process Signup
 Route::post('/signup', function () {
     $name = request('name');
-    $email = request('email');
+    $email = strtolower(trim(request('email')));
     $password = request('password');
     $confirm = request('password_confirmation');
 
+    // 1️⃣ Basic validation
     if (!$name || !$email || !$password || $password !== $confirm) {
-        return back()->with('error', 'Invalid input.');
+        return back()->with('error', 'Please fill all fields correctly.');
     }
 
-    // ✅ Check if email already exists
+    // 2️⃣ Check if email exists
     if (DB::table('users')->where('email', $email)->exists()) {
         return back()->with('email_error', 'This email is already registered.')->withInput();
     }
 
-    // ✅ Insert user
-    DB::table('users')->insert([
+    // 3️⃣ Create new user
+    $userId = DB::table('users')->insertGetId([
         'name' => $name,
         'email' => $email,
         'password' => Hash::make($password),
@@ -49,9 +49,19 @@ Route::post('/signup', function () {
         'updated_at' => now(),
     ]);
 
-    return redirect()->route('login')->with('success', 'Account created! Please log in.');
-});
+    // 4️⃣ Auto-login
+    Auth::loginUsingId($userId);
+    session()->regenerate();
 
+    // 5️⃣ Redirect based on email domain
+    if (str_ends_with($email, '@admin.brufuel.bn')) {
+        return redirect()->route('admin.dashboard');
+    } elseif (str_ends_with($email, '@driver.brufuel.bn')) {
+        return redirect()->route('driver.dashboard');
+    } else {
+        return redirect()->route('home');
+    }
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -74,7 +84,6 @@ Route::view('/menu', 'menu')->name('menu');
 */
 
 Route::middleware(['auth'])->group(function () {
-
     // ✅ Admin Dashboard
     Route::view('/admin.dashboard', 'admin.dashboard')->name('admin.dashboard');
 
@@ -84,7 +93,11 @@ Route::middleware(['auth'])->group(function () {
     // ✅ Default Dashboard
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
-    // ✅ Settings Routes (Volt)
+    /*
+    |--------------------------------------------------------------------------
+    | Settings (Volt Components)
+    |--------------------------------------------------------------------------
+    */
     Route::redirect('/settings', '/settings/profile');
 
     Volt::route('/settings/profile', 'settings.profile')->name('profile.edit');
