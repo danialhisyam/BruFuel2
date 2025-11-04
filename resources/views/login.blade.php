@@ -6,22 +6,44 @@
 */
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('components.layouts.auth')] class extends Component {
-  public string $email = ''; 
-  public string $password = '';
+new class extends Component {
+    public string $email = '';
+    public string $password = '';
 
-  public function login(): void {
-    $creds = ['email' => $this->email, 'password' => $this->password];
-    if (Auth::attempt($creds)) {
-      Session::regenerate();
-      $this->redirectIntended(route('home', absolute: false), navigate: true);
+    public function login(): void
+    {
+        $user = \App\Models\User::where('email', $this->email)->first();
+
+        // 1️⃣ No email found — go to signup
+        if (!$user) {
+            $this->redirect(route('signup', absolute: false), navigate: true);
+            return;
+        }
+
+        // 2️⃣ Email found — check password
+        if (!\Illuminate\Support\Facades\Hash::check($this->password, $user->password)) {
+            session()->flash('error', 'Incorrect password. Please try again.');
+            return;
+        }
+
+        // 3️⃣ Both match — log in
+        \Illuminate\Support\Facades\Auth::login($user);
+        \Illuminate\Support\Facades\Session::regenerate();
+
+        // Redirect based on email domain (role-style logic)
+        if (str_ends_with($user->email, '@admin.brufuel.bn')) {
+            $this->redirect(route('admin.dashboard', absolute: false), navigate: true);
+        } elseif (str_ends_with($user->email, '@driver.brufuel.bn')) {
+            $this->redirect(route('driver.dashboard', absolute: false), navigate: true);
+        } else {
+            $this->redirect(route('home', absolute: false), navigate: true);
+        }
     }
-  }
 };
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +51,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>BruFuel Portal - Login</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+@livewireStyles
 <style>
 /*
 |--------------------------------------------------------------------------
@@ -82,44 +104,107 @@ h2{font-size:2rem;font-weight:700;text-align:center;margin:0 0 1rem 0;line-heigh
 p.subtitle{text-align:center;color:rgba(255,255,255,.7);margin:0 0 2rem 0;font-weight:500;font-size:1rem;line-height:1.6;white-space:nowrap;}
 h2,p.subtitle{position:relative;left:10px;text-align:center;}
 
-/*
-|--------------------------------------------------------------------------
-| Input Boxes
-|--------------------------------------------------------------------------
-*/
-.credential-input{width:100%;height:45px;margin-bottom:15px;padding:0 15px;border:none;border-radius:15px;background:rgba(217,217,217,.1);font-size:15px;font-weight:500;font-family:'Poppins',sans-serif;color:#9ca3af;outline:none;transition:.3s;-webkit-text-fill-color:rgba(255,255,255,.14);}
-.credential-input::placeholder{color:rgba(255,255,255,.25);}
-.credential-input.has-text{color:#fff!important;-webkit-text-fill-color:#fff!important;}
-.credential-input:focus{border:1px solid rgba(255,255,255,.25);}
+/* make autofill act like .has-text (white) */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0px 1000px rgba(217, 217, 217, 0.1) inset !important; /* fully transparent */
-  -webkit-text-fill-color: #ffffff !important; /* plain white text */
-  caret-color: #00000013 !important;
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px rgba(217,217,217,0.1) inset !important;
+  -webkit-text-fill-color: #ffffff !important;
   background-color: transparent !important;
+  caret-color: #ffffff !important;
+  transition: background-color 9999s ease-in-out 0s !important;}
+  .credential-input {
+  width: 100%;
+  height: 45px;
+  margin-bottom: 15px;
+  padding: 0 15px;
+  border: none;
+  border-radius: 15px;
+  background: rgba(217,217,217,.1);
+  font-size: 15px;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  outline: none;
+  transition: color .25s ease, -webkit-text-fill-color .25s ease;
+  
+  /* default: gray always */
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #9ca3af !important;
+}
+
+/* placeholder always gray */
+.credential-input::placeholder {
+  color: rgba(156,163,175,0.85);
+}
+
+/* DO NOTHING on focus if empty */
+.credential-input:focus {
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #9ca3af !important;
+}
+
+/* turns white ONLY when text exists */
+.credential-input.has-text {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* make autofill act like .has-text (white) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px rgba(217,217,217,0.1) inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-color: transparent !important;
+  caret-color: #ffffff !important;
   transition: background-color 9999s ease-in-out 0s !important;
 }
+
 
 /*
 |--------------------------------------------------------------------------
 | Footer Link (Unchanged Position)
 |--------------------------------------------------------------------------
 */
-.form-footer{margin-top:-10px;width:100%;text-align:right;padding-right:260px;padding-bottom:260px;}
-.form-footer a{color:#FFE100;font-weight:400;font-size:13px;text-decoration:none;display:inline-block;transition:transform .15s ease,opacity .2s;}
-.form-footer a:hover{transform:scale(1.05);opacity:.9;}
+.form-footer {
+  margin-top: -60px;
+  width: 100%;
+  text-align: right;
+  padding-right: 270px;
+  padding-bottom: 260px;
+}
+
+.form-footer a {
+  position: fixed;
+  bottom: 315px;
+  right: 190px;
+  color: #FFE100;
+  font-weight: 400;
+  font-size: 13px;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.15s ease, opacity 0.2s;
+  z-index: 999999;
+  pointer-events: auto;
+}
+
+.form-footer a:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
 
 /*
 |--------------------------------------------------------------------------
 | Button Container + Button
 |--------------------------------------------------------------------------
 */
-.button-container{width:100%;display:flex;justify-content:center;align-items:center;position:relative;bottom:200px;}
+.button-container{width:100%;display:flex;justify-content:center;align-items:center;position:relative;bottom:-60px;pointer-events: none;}
 button{width:100%;max-width:310px;height:50px;border:none;border-radius:33px;background:#4B5563;color:#fff;font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;cursor:not-allowed;transition:all .3s ease;position:relative;z-index:5;}
 button.enabled{background:#760000;cursor:pointer;}
 button.enabled:hover{transform:scale(1.03);}
+.button-container button {
+  pointer-events: auto;}
 
 /*
 |--------------------------------------------------------------------------
@@ -136,6 +221,34 @@ button.enabled:hover{transform:scale(1.03);}
 |--------------------------------------------------------------------------
 */
 @keyframes fadeInBg{to{opacity:1;}}
+
+.error-message {
+  color: #ff4d4d;
+  font-weight: 500;
+  font-size: 12px;
+  margin-top: 115px;
+  margin-bottom: 8px;
+  text-align: left;
+  width: 100%;
+  padding-left: 5px;
+  opacity: 0.95;
+  position: absolute;
+  left: 95px;
+}
+
+/* Page transition for glass-container */
+.glass-container {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.glass-container.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
 </style>
 </head>
 
@@ -148,17 +261,21 @@ button.enabled:hover{transform:scale(1.03);}
     <div class="form-wrapper">
       <h2>Welcome Back</h2>
       <p class="subtitle">Log in to your <strong>BruFuel</strong> account</p>
-      <form wire:submit="login" id="loginForm">
+      <form action="{{ route('login.process') }}" method="POST" id="loginForm">
         @csrf
-        <input wire:model="email" type="email" placeholder="Email Address" class="credential-input" required>
-        <input wire:model="password" type="password" placeholder="Password" class="credential-input" required>
+        <input name="email" type="email" placeholder="Email Address" class="credential-input" required>
+        <input name="password" type="password" placeholder="Password" class="credential-input" required>
+        @if (session('error'))
+          <p class="error-message">{{ session('error') }}</p>
+        @endif
+        <div class="button-container">
+          <button id="loginButton" type="submit">LOGIN</button>
+        </div>
       </form>
+      </div>
+     <div class="form-footer">
+      <a href="{{ route('signup') }}">Don't have an account? Sign up</a>
     </div>
-
-    <div class="form-footer"><a href="{{ route('signup') }}">Don't have an account? Sign up</a></div>
-
-    <div class="button-container">
-      <button id="loginButton" type="submit" form="loginForm">LOGIN</button>
     </div>
   </div>
 </div>
@@ -190,20 +307,16 @@ function checkFormValidity() {
 
   const inputs = activeForm.querySelectorAll('.credential-input');
   const btn = document.getElementById("loginButton");
-  const allFilled = [...inputs].every(i => i.value.trim() !== "");
 
-  btn.classList.toggle('enabled', allFilled);
-  btn.disabled = !allFilled;
-}
+  // simple email format test
+  const email = activeForm.querySelector('input[type="email"]').value.trim();
+  const password = activeForm.querySelector('input[type="password"]').value.trim();
 
-function resetAutofillTransparency() {
-  document.querySelectorAll('.credential-input').forEach(el => {
-    const val = el.value;
-    el.style.webkitBoxShadow = '0 0 0px 1000px rgba(217, 217, 217, 0.1) inset';
-    el.style.backgroundColor = 'transparent';
-    el.style.webkitTextFillColor = '#ffffff';
-    el.value = ''; el.value = val;
-  });
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const allValid = emailValid && password !== "";
+
+  btn.classList.toggle('enabled', allValid);
+  btn.disabled = !allValid;
 }
 
 /*
@@ -217,30 +330,36 @@ window.addEventListener('load', () => {
   setTimeout(resetAutofillTransparency, 400);
 });
 
-/*
-|--------------------------------------------------------------------------
-| Redirect After Login (Role-based)
-|--------------------------------------------------------------------------
-*/
-const loginBtn = document.getElementById('loginButton');
-if (loginBtn) {
-  loginBtn.onclick = (e) => {
-    e.preventDefault();
-    const emailInput = document.querySelector('#loginForm input[type="email"]');
-    if (!emailInput) return;
+// Fade-in animation for glass container
+window.addEventListener('load', () => {
+  const glassContainer = document.querySelector('.glass-container');
+  setTimeout(() => {
+    glassContainer.classList.add('loaded');
+  }, 100);
+});
 
-    const emailValue = emailInput.value.toLowerCase();
+// Clear all form fields and disable login button on reload / back-forward navigation
+window.addEventListener('pageshow', function (event) {
+  // If page restored from bfcache (back/forward cache), force reset
+  if (event.persisted) {
+    window.location.reload();
+  }
 
-    if (emailValue.endsWith('@admin.brufuel.bn')) {
-      window.location.href = '{{ route('admin.dashboard') }}';
-    } else if (emailValue.endsWith('@driver.brufuel.bn')) {
-      window.location.href = '{{ route('driver.dashboard') }}';
-    } else {
-      window.location.href = '{{ route('home') }}';
-    }
-  };
-}
+  // Clear all text, email, and password inputs
+  document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]').forEach(i => {
+    i.value = '';
+    i.classList.remove('has-text');
+  });
+
+  // Disable button state
+  const btn = document.getElementById('loginButton');
+  if (btn) {
+    btn.classList.remove('enabled');
+    btn.disabled = true;
+  }
+});
+
 </script>
-
+  @livewireScripts
 </body>
 </html>

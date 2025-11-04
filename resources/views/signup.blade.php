@@ -1,40 +1,3 @@
-<?php
-/*
-|--------------------------------------------------------------------------
-| Register Page Component Logic
-|--------------------------------------------------------------------------
-*/
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Validation\Rules;
-use Livewire\Attributes\Layout;
-use Livewire\Volt\Component;
-
-new #[Layout('components.layouts.auth')] class extends Component {
-  public string $name = ''; 
-  public string $email = ''; 
-  public string $password = ''; 
-  public string $password_confirmation = '';
-
-public function register(): void {
-    $validated = $this->validate([
-      'name' => ['required', 'string', 'max:255'],
-      'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-      'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
-    ]);
-
-    $validated['password'] = Hash::make($validated['password']);
-    User::create($validated);
-
-    // 👇 this is correct — don’t touch it
-    $this->redirect(route('login'), navigate: true);
-}
-  };
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -164,6 +127,24 @@ button.enabled:hover{transform:scale(1.03);}
 |--------------------------------------------------------------------------
 */
 .glass-container.loaded{opacity:1;transform:translateY(0);}
+
+/* ✅ Final Fix: stop black text + black caret when refocusing autofilled input */
+.credential-input:-webkit-autofill,
+.credential-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #9ca3af !important;  /* gray like initial state */
+  color: #9ca3af !important;
+  caret-color: #ffffff !important;              /* keep white typing bar */
+  transition: color 0.25s ease, -webkit-text-fill-color 0.25s ease;
+}
+
+/* When input has text (manual or autofill) */
+.credential-input.has-text,
+.credential-input:focus.has-text {
+  -webkit-text-fill-color: #ffffff !important;  /* turns white when filled */
+  color: #ffffff !important;
+  caret-color: #ffffff !important;
+}
+
 </style>
 </head>
 
@@ -176,7 +157,7 @@ button.enabled:hover{transform:scale(1.03);}
     <div class="form-wrapper">
       <h2>Create an Account</h2>
       <p class="subtitle">Join <strong>BruFuel</strong> and start your journey</p>
-       <form method="GET" action="/login" id="registerForm">
+      <form method="POST" action="/signup" id="registerForm">
 
         @csrf
         <!-- Improved name field with proper autocomplete -->
@@ -186,7 +167,7 @@ button.enabled:hover{transform:scale(1.03);}
                placeholder="Full Name" 
                class="credential-input" 
                required 
-               autocomplete="name">
+               autocomplete="off">
         
         <!-- Improved email field with multiple autocomplete hints -->
         <input wire:model="email" 
@@ -197,6 +178,11 @@ button.enabled:hover{transform:scale(1.03);}
                required 
                autocomplete="email username"
                inputmode="email">
+              @if(session('email_error'))
+                <div style="color:#ff4444; font-size:13px; margin-bottom:10px;">
+                    {{ session('email_error') }}
+                </div>
+              @endif
         
         <!-- Improved password field -->
         <input wire:model="password" 
@@ -391,6 +377,59 @@ document.addEventListener('animationend', function(e) {
     detectAutofill();
   }
 }, true);
+  window.addEventListener('load', () => {
+  const passwordInput  = document.querySelector('input[name="password"]');
+  const confirmInput   = document.querySelector('input[name="password_confirmation"]');
+
+  if (!passwordInput || !confirmInput) return;
+
+  // --- 1️⃣ Prevent Chrome from autofilling confirm field ---
+  confirmInput.setAttribute('autocomplete', 'off');
+  confirmInput.setAttribute('readonly', true);
+
+  // --- 2️⃣ Wait for Chrome autofill ---
+  setTimeout(() => {
+    if (passwordInput.value && !confirmInput.value) {
+      confirmInput.value = passwordInput.value;
+      confirmInput.classList.add('has-text');
+    }
+  }, 800);
+
+  // --- 3️⃣ User types manually: stop sync & clear confirm ---
+  passwordInput.addEventListener('input', () => {
+    confirmInput.removeAttribute('readonly');
+    confirmInput.value = '';
+    confirmInput.classList.remove('has-text');
+  });
+
+  // --- 4️⃣ Unlock confirm when user focuses it ---
+  confirmInput.addEventListener('focus', () => {
+    confirmInput.removeAttribute('readonly');
+  });
+});
+</script>
+
+<script>
+window.addEventListener('pageshow', function (event) {
+  // If the page was loaded from cache (like Back/Forward or reload),
+  // force a real reload to reset inputs and Livewire data.
+  if (event.persisted) {
+    window.location.reload();
+  }
+
+  // Explicitly clear all text and password inputs on page load.
+  document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]').forEach(i => {
+    i.value = '';
+    i.classList.remove('has-text');
+  });
+
+  // Disable "enabled" button state
+  const btn = document.getElementById('createButton');
+  if (btn) {
+    btn.classList.remove('enabled');
+    btn.disabled = true;
+  }
+});
 </script>
 
 </body>
