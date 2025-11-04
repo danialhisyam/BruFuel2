@@ -199,3 +199,21 @@ Route::get('/payments', [PaymentController::class, 'index'])->name('admin.paymen
     Route::get('/payments/export/csv',   [PaymentController::class, 'exportCsv'])->name('admin.payments.export.csv');
     Route::get('/payments/export/excel', [PaymentController::class, 'exportExcel'])->name('admin.payments.export.excel');
     });
+
+    // routes/web.php
+use App\Http\Controllers\Admin\DriverController;
+
+Route::get('/admin/drivers', [DriverController::class,'index'])->name('admin.drivers.index');
+Route::get('/admin/drivers/{driver}', [DriverController::class,'show'])->name('admin.drivers.show');
+Route::put('/admin/drivers/{driver}', [DriverController::class,'update'])->name('admin.drivers.update');
+Route::delete('/admin/drivers/{driver}', [DriverController::class,'destroy'])->name('admin.drivers.destroy');
+
+// routes/web.php
+
+Route::prefix('admin')->name('admin.')->group(function () {
+  Route::get('/drivers', [\App\Http\Controllers\Admin\DriverController::class,'index'])->name('drivers.index');
+  Route::get('/drivers/{driver}', [\App\Http\Controllers\Admin\DriverController::class,'show'])->name('drivers.show');
+  Route::post('/drivers', [\App\Http\Controllers\Admin\DriverController::class,'store'])->name('drivers.store');
+  Route::put('/drivers/{driver}', [\App\Http\Controllers\Admin\DriverController::class,'update'])->name('drivers.update');
+  Route::delete('/drivers/{driver}', [\App\Http\Controllers\Admin\DriverController::class,'destroy'])->name('drivers.destroy');
+});
