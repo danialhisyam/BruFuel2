@@ -9,14 +9,13 @@ use Livewire\Volt\Volt;
 use App\Http\Controllers\AuthController;
 
 Route::middleware('auth')->group(function () {
-    Route::view('/checkout/fuel', 'logged.checkout.fuel')->name('checkout.fuel');
+    Route::view('/checkout/fuel', 'logged.checkout.fuel')->name('checkout.fuel')->middleware('auth');
     Route::view('/checkout/location', 'logged.checkout.location')->name('checkout.location');
     Route::view('/checkout/vehicle', 'logged.checkout.vehicle')->name('checkout.vehicle');
     Route::view('/checkout/payment', 'logged.checkout.payment')->name('checkout.payment');
     Route::view('/checkout/confirm', 'logged.checkout.confirm')->name('checkout.confirm');
     Route::view('/checkout/success', 'logged.checkout.success')->name('checkout.success');
 });
-
 
 /*
 |--------------------------------------------------------------------------
