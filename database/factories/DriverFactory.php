@@ -17,8 +17,7 @@ class DriverFactory extends Factory
             'name'          => $this->faker->name(),
             'email' => $this->faker->unique()->userName() . '@brufuel.driver',
             'phone'         => $this->faker->phoneNumber(),
-            'license_type'  => $this->faker->randomElement(['Class A','Class B','Class C']),
-            'license_expiry'=> $this->faker->dateTimeBetween('now','+3 years')->format('Y-m-d'),
+            
             'status'        => $this->faker->randomElement(['active','inactive']),
         ];
     }

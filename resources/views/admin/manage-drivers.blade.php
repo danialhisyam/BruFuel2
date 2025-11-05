@@ -138,82 +138,84 @@
       </div>
     </div>
 
-          {{-- ---- Table ---- --}}
-         <div class="overflow-x-auto -mx-2 md:mx-0">
+        <div class="overflow-x-auto -mx-2 md:mx-0">
   <table class="w-full table-fixed text-left">
-    <colgroup>
-      <col class="w-10">
-      <col class="w-[38%] lg:w-[40%] xl:w-[42%]">
-      <col class="w-[16%] lg:w-[18%]">
-      <col class="w-[26%] lg:w-[24%] xl:w-[22%]">
-      <col class="w-[10%]">
-      <col class="w-[10%]">
-    </colgroup>
+    <!-- EXACTLY 5 COLUMNS -->
+   <colgroup>
+  <col class="w-10">                        <!-- checkbox -->
+  <col class="w-[38%] lg:w-[40%]">          <!-- name / code -->
+  <col class="w-[30%] lg:w-[80%]">          <!-- contact (shifted wider) -->
+  <col class="w-[20%]">                     <!-- status -->
+  <col class="w-[20%] lg:w-[30%]">          <!-- actions -->
+</colgroup>
 
-              <tbody class="divide-y divide-slate-800">
-              @foreach($drivers as $driver)
-                <tr>
-                  <td class="py-3 w-10"><input type="checkbox"></td>
+    <thead class="hidden md:table-header-group">
+      <tr class="text-xs uppercase tracking-wide text-slate-400">
+        <th class="py-2 pl-2 pr-3 text-left"> </th>
+        <th class="py-2 px-3 text-left">Driver</th>
+        <th class="py-2 px-3 text-left">Contact</th>
+        <th class="py-2 px-3 text-center">Status</th>
+        <th class="py-2 pl-3 pr-4 text-right">Actions</th>
+      </tr>
+    </thead>
 
-                  {{-- Driver identity cell (avatar initials + name + code) --}}
-                  <td class="py-3">
-                    <div class="flex items-center gap-3">
-                      <div class="w-10 h-10 rounded-full bg-indigo-600 grid place-items-center text-white">
-                        {{ strtoupper(collect(explode(' ', $driver->name))->map(fn($n)=>substr($n,0,1))->take(2)->implode('')) }}
-                      </div>
-                      <div>
-                        <div class="font-semibold">{{ $driver->name }}</div>
-                        <div class="text-xs text-slate-400">ID: {{ $driver->driver_code }}</div>
-                      </div>
-                    </div>
-                  </td>
+    <tbody class="divide-y divide-slate-800">
+      @foreach($drivers as $driver)
+        <tr class="align-middle">
+          <!-- checkbox -->
+          <td class="py-3 pl-2 pr-3">
+            <input type="checkbox" class="h-4 w-4 rounded border-slate-600 bg-slate-900">
+          </td>
 
-                  {{-- License info --}}
-                  <td>
-                    <div>{{ $driver->license_type ?? '-' }}</div>
-                    <div class="text-xs text-slate-400">
-                      Exp: {{ \Illuminate\Support\Carbon::parse($driver->license_expiry)->format('Y-m-d') }}
-                    </div>
-                  </td>
+          <!-- identity -->
+          <td class="py-3 px-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-indigo-600 grid place-items-center text-white text-sm font-semibold">
+                {{ strtoupper(collect(explode(' ', $driver->name))->map(fn($n)=>substr($n,0,1))->take(2)->implode('')) }}
+              </div>
+              <div class="min-w-0">
+                <div class="font-semibold truncate">{{ $driver->name }}</div>
+                <div class="text-xs text-slate-400">ID: {{ $driver->driver_code }}</div>
+              </div>
+            </div>
+          </td>
 
-                  {{-- Contact info --}}
-                  <td>
-                    <div>{{ $driver->email }}</div>
-                    <div class="text-xs text-slate-400">{{ $driver->phone }}</div>
-                  </td>
+          <!-- contact -->
+          <td class="py-3 px-3">
+            <div class="truncate">{{ $driver->email }}</div>
+            <div class="text-xs text-slate-400 truncate">{{ $driver->phone }}</div>
+          </td>
 
-                  {{-- Status pill --}}
-                  <td>
-                    @php $active = $driver->status === 'active'; @endphp
-                    <span class="px-2 py-1 rounded text-xs {{ $active ? 'bg-green-800 text-green-300' : 'bg-amber-800 text-amber-300' }}">
-                      {{ ucfirst($driver->status) }}
-                    </span>
-                  </td>
+          <!-- status (centered) -->
+          <td class="py-3 px-3 text-center">
+            @php $active = $driver->status === 'active'; @endphp
+            <span class="inline-flex h-7 items-center rounded-full px-3 text-xs font-medium whitespace-nowrap
+              {{ $active ? 'bg-emerald-900/40 text-emerald-300 border border-emerald-700'
+                         : 'bg-amber-900/30 text-amber-300 border border-amber-700' }}">
+              {{ ucfirst($driver->status) }}
+            </span>
+          </td>
 
-                  {{-- Row actions --}}
-                  <td class="text-right">
-                    <button class="px-3 py-1 rounded bg-slate-700 text-sm mr-2"
-                            @click="openEdit({{ $driver->id }})">Edit</button>
-                    <button class="px-3 py-1 rounded bg-red-600 text-sm"
-                            @click="confirmDelete({{ $driver->id }})">Delete</button>
-                  </td>
-                </tr>
-              @endforeach
-              </tbody>
-            </table>
-          </div>
+          <!-- actions (right-aligned, uniform buttons) -->
+          <td class="py-3 pl-3 pr-4 text-right">
+            <div class="inline-flex items-center gap-2">
+              <button
+                class="inline-flex h-8 items-center justify-center rounded bg-slate-700 hover:bg-slate-600 px-3 text-sm">
+                Edit
+              </button>
+              <button
+                class="inline-flex h-8 items-center justify-center rounded bg-red-600 hover:bg-red-500 px-3 text-sm">
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      @endforeach
+    </tbody>
+  </table>
+</div>
 
-          {{-- Pagination --}}
-          <div class="mt-4">
-            {{ $drivers->links() }}
-          </div>
-        </div>
 
-      </div>
-    </main>
-  </div>
-
-  {{-- ============================== EDIT MODAL ============================== --}}
   {{-- ============================== EDIT MODAL ============================== --}}
 <div 
   x-show="modalOpen" 
@@ -252,16 +254,6 @@
         </label>
 
         <label class="block text-sm">
-          <span class="text-slate-300">License Type</span>
-          <input x-model="form.license_type" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-amber-400 focus:outline-none">
-        </label>
-
-        <label class="block text-sm">
-          <span class="text-slate-300">Expiry</span>
-          <input x-model="form.license_expiry" type="date" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-amber-400 focus:outline-none">
-        </label>
-
-        <label class="block text-sm">
           <span class="text-slate-300">Status</span>
           <select x-model="form.status" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-amber-400 focus:outline-none">
             <option value="active">Active</option>
@@ -287,8 +279,7 @@
     </form>
   </div>
 </div>
-    </div>
-  </div>
+
 
   {{-- ============================== PAGE SCRIPTS (CRUD via fetch) ============================== --}}
   <script>

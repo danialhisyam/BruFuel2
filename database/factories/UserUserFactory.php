@@ -11,7 +11,7 @@ class UserFactory extends Factory {
         $statuses = ['Active','Inactive','Pending'];
         return [
             'name'           => $name,
-            'email'          => $this->faker->unique()->safeEmail(),
+            'email' => $this->faker->unique()->userName() . '@gmail.com',
             'email_verified_at' => now(),
             'password'       => bcrypt('password'), // demo
             'remember_token' => Str::random(10),

@@ -41,8 +41,6 @@ class DriverController extends Controller
             'name'           => ['required','string','max:255'],
             'email'          => ['nullable','email','max:255'],
             'phone'          => ['nullable','string','max:40'],
-            'license_type'   => ['nullable','string','max:50'],
-            'license_expiry' => ['nullable','date'],
             'status'         => ['required', Rule::in(['active','inactive'])],
         ]);
 
@@ -58,8 +56,6 @@ class DriverController extends Controller
             'name'           => ['required','string','max:255'],
             'email'          => ['nullable','email','max:255'],
             'phone'          => ['nullable','string','max:40'],
-            'license_type'   => ['nullable','string','max:50'],
-            'license_expiry' => ['nullable','date'],
             'status'         => ['required', Rule::in(['active','inactive'])],
         ]);
 

@@ -14,8 +14,6 @@ return new class extends Migration {
             $table->string('name');
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->string('license_type')->nullable(); // Class A/B/C...
-            $table->date('license_expiry')->nullable();
             $table->enum('status', ['active','inactive'])->default('inactive');
             $table->timestamps();
         });
