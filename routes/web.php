@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-<<<<<<< HEAD
+HEAD
 use Illuminate\Http\Request;
 use App\Livewire\CheckoutComponent;
 
