@@ -4,9 +4,19 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Fortify\Features;
+use Illuminate\Http\Request;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\AuthController;
+
+Route::middleware('auth')->group(function () {
+    Route::view('/checkout/fuel', 'logged.checkout.fuel')->name('checkout.fuel');
+    Route::view('/checkout/location', 'logged.checkout.location')->name('checkout.location');
+    Route::view('/checkout/vehicle', 'logged.checkout.vehicle')->name('checkout.vehicle');
+    Route::view('/checkout/payment', 'logged.checkout.payment')->name('checkout.payment');
+    Route::view('/checkout/confirm', 'logged.checkout.confirm')->name('checkout.confirm');
+    Route::view('/checkout/success', 'logged.checkout.success')->name('checkout.success');
+});
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +24,6 @@ use App\Http\Controllers\AuthController;
 |--------------------------------------------------------------------------
 */
 Route::get('/login', function () {
-    // If user is already logged in, send them to their personal home
     if (Auth::check()) {
         $username = strtolower(Auth::user()->name);
         return redirect()->route('user.home', ['username' => $username]);
@@ -25,9 +34,9 @@ Route::get('/login', function () {
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
 Route::get('/signup', function () {
-    // If logged in, go back home
     if (Auth::check()) {
-        return redirect()->route('home');
+        $username = strtolower(Auth::user()->name);
+        return redirect()->route('user.home', ['username' => $username]);
     }
     return view('signup');
 })->name('signup');
@@ -54,7 +63,6 @@ Route::post('/signup', function () {
         'updated_at' => now(),
     ]);
 
-    // ✅ After signup, go to login page (NOT logged in automatically)
     return redirect()->route('login')->with('success', 'Account created! Please log in.');
 });
 
@@ -67,7 +75,7 @@ Route::post('/logout', function () {
     Auth::logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
-    return redirect('/home'); // goes straight back to public home
+    return redirect('/home');
 })->name('logout')->middleware('auth');
 
 /*
@@ -76,11 +84,7 @@ Route::post('/logout', function () {
 |--------------------------------------------------------------------------
 */
 Route::redirect('/', '/home');
-Route::view('/home', 'home')->name('home');
-Route::view('/menu', 'menu')->name('menu');
-Route::view('/history', 'history')->name('history');
 
-// 🏠 HOME PAGE
 Route::get('/home', function () {
     if (Auth::check()) {
         $username = strtolower(Auth::user()->name);
@@ -89,7 +93,6 @@ Route::get('/home', function () {
     return view('home');
 })->name('home');
 
-// 🍔 MENU PAGE
 Route::get('/menu', function () {
     if (Auth::check()) {
         $username = strtolower(Auth::user()->name);
@@ -98,7 +101,6 @@ Route::get('/menu', function () {
     return view('menu');
 })->name('menu');
 
-// 🕓 HISTORY PAGE
 Route::get('/history', function () {
     if (Auth::check()) {
         $username = strtolower(Auth::user()->name);
@@ -109,13 +111,14 @@ Route::get('/history', function () {
 
 /*
 |--------------------------------------------------------------------------
-| AUTH DASHBOARDS (ADMIN / DRIVER)
+| ADMIN / DRIVER DASHBOARDS
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
     Route::view('/admin.dashboard', 'admin.dashboard')->name('admin.dashboard');
     Route::view('/driver.dashboard', 'driver.dashboard')->name('driver.dashboard');
 
+    // Fortify Volt settings pages
     Route::redirect('/settings', '/settings/profile');
     Volt::route('/settings/profile', 'settings.profile')->name('profile.edit');
     Volt::route('/settings/password', 'settings.password')->name('password.edit');
@@ -125,7 +128,7 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| USER-SPECIFIC DASHBOARD (/username/home etc.)
+| USER-SPECIFIC DASHBOARD (/username/home, /username/menu, /username/history)
 |--------------------------------------------------------------------------
 */
 Route::pattern('username', '^(?!signup|login|logout|home|menu|history|admin\.dashboard|driver\.dashboard|settings).*');
@@ -156,7 +159,27 @@ Route::middleware('auth')->prefix('{username}')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| DEBUG AUTH STATE (OPTIONAL)
+| PROFILE PICTURE UPLOAD
+|--------------------------------------------------------------------------
+*/
+Route::post('/profile/upload', function (Request $request) {
+    $user = Auth::user();
+    if (!$user) return redirect()->route('login');
+
+    $request->validate([
+        'profile_picture' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
+
+    $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+    $user->profile_picture = $path;
+    $user->save();
+
+    return back()->with('success', 'Profile picture updated successfully!');
+})->name('profile.upload')->middleware('auth');
+
+/*
+|--------------------------------------------------------------------------
+| DEBUG AUTH STATE
 |--------------------------------------------------------------------------
 */
 Route::get('/debug-auth', function () {
@@ -164,4 +187,14 @@ Route::get('/debug-auth', function () {
         'authenticated' => Auth::check(),
         'user' => Auth::user(),
     ];
+});
+
+// 🚫 Prevent browser caching after logout
+Route::middleware('auth')->group(function () {
+    \Illuminate\Support\Facades\Response::macro('nocache', function ($content) {
+        return response($content)
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', 'Fri, 01 Jan 1990 00:00:00 GMT');
+    });
 });
