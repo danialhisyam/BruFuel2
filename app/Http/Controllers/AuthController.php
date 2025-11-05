@@ -29,12 +29,15 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
+        // ✅ Redirect logic
         if (str_ends_with($user->email, '@admin.brufuel.bn')) {
             return redirect()->route('admin.dashboard');
         } elseif (str_ends_with($user->email, '@driver.brufuel.bn')) {
             return redirect()->route('driver.dashboard');
         }
 
-        return redirect()->route('home');
+        // ✅ Normal users → /{username}/home
+        $username = strtolower($user->name);
+        return redirect()->route('user.home', ['username' => $username]);
     }
 }

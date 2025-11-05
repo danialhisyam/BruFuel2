@@ -1,11 +1,12 @@
 <?php
 /*
 |--------------------------------------------------------------------------
-| Login Page Component Logic
+| Login Page Component Logic (FINAL — Fixed Redirect)
 |--------------------------------------------------------------------------
 */
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Volt\Component;
 
 new class extends Component {
@@ -14,35 +15,39 @@ new class extends Component {
 
     public function login(): void
     {
+        // 🔹 Find user by email
         $user = \App\Models\User::where('email', $this->email)->first();
 
-        // 1️⃣ No email found — go to signup
+        // 1️⃣ No email found → redirect to signup
         if (!$user) {
             $this->redirect(route('signup', absolute: false), navigate: true);
             return;
         }
 
-        // 2️⃣ Email found — check password
-        if (!\Illuminate\Support\Facades\Hash::check($this->password, $user->password)) {
+        // 2️⃣ Password mismatch
+        if (!Hash::check($this->password, $user->password)) {
             session()->flash('error', 'Incorrect password. Please try again.');
             return;
         }
 
-        // 3️⃣ Both match — log in
-        \Illuminate\Support\Facades\Auth::login($user);
-        \Illuminate\Support\Facades\Session::regenerate();
+        // 3️⃣ Log in and regenerate session
+        Auth::login($user);
+        Session::regenerate();
 
-        // Redirect based on email domain (role-style logic)
+        // 4️⃣ Redirect based on email domain
         if (str_ends_with($user->email, '@admin.brufuel.bn')) {
             $this->redirect(route('admin.dashboard', absolute: false), navigate: true);
         } elseif (str_ends_with($user->email, '@driver.brufuel.bn')) {
             $this->redirect(route('driver.dashboard', absolute: false), navigate: true);
         } else {
-            $this->redirect(route('home', absolute: false), navigate: true);
+            // ✅ Redirect to personalized user dashboard
+            $username = strtolower($user->name); // lowercase for consistency
+            $this->redirect(route('user.home', ['username' => $username], absolute: false), navigate: true);
         }
     }
 };
 ?>
+
 
 
 <!DOCTYPE html>
@@ -177,7 +182,7 @@ input:-webkit-autofill:focus {
 
 .form-footer a {
   position: fixed;
-  bottom: 315px;
+  bottom: 270px;
   right: 190px;
   color: #FFE100;
   font-weight: 400;

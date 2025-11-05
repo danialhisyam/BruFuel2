@@ -64,7 +64,7 @@
             style="width:30px;height:35px;left:371.85px;top:89.97px;position:absolute;cursor:pointer;transition:transform 0.15s ease;"
             onmousedown="this.style.transform='scale(1.1)'" onmouseup="this.style.transform='scale(1)'"
             onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
-            ontouchend="this.style.transform='scale(1)'">
+            ontouchend="this.style.transform='scale(1)'" onclick="window.location.href='{{ route('signup') }}'">>
 
         <!--------------------------------------------------------------------------
         | TABS
@@ -193,7 +193,7 @@
                     onmouseleave="this.style.transform='scale(1)'"
                     ontouchstart="this.style.transform='scale(1.1)'"
                     ontouchend="this.style.transform='scale(1)'"
-                    onclick="window.location.href='{{ route('signup') }}'">
+                    onclick="event.stopPropagation(); window.location.assign('{{ route('signup') }}')">
                     <span style="color: #FFE100; font-size: 9px; font-family: Poppins; font-weight: 500;">
                         Don't have an account yet?
                     </span>
