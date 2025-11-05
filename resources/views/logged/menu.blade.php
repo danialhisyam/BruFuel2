@@ -64,7 +64,9 @@
             onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
             ontouchend="this.style.transform='scale(1)'" onclick="window.location.href='{{ route('user.home', ['username' => Auth::user()->name]) }}'">
 
-        <!-- Profile Picture Button (replaces login button for logged users) -->
+    <!--------------------------------------------------------------------------
+    | USER PROFILE PICTURE
+    |-------------------------------------------------------------------------->
         <img src="{{ $user->profile_picture 
             ? asset('storage/' . $user->profile_picture) 
             : asset('images/default-profile.png') }}"
@@ -129,6 +131,44 @@
             </form>
         </div>
 
+            <style>
+        /* Profile dropdown animation */
+        #profileMenu.show {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        /* Mobile-friendly adjustments */
+        @media (max-width: 480px) {
+            #profileMenu {
+                right: 10px !important;
+                top: 80px !important;
+                width: 80% !important;
+                font-size: 14px;
+            }
+            #profileMenu button {
+                font-size: 14px !important;
+                padding: 10px 0 !important;
+            }
+        }
+    </style>
+
+        <script>
+        document.addEventListener('click', function (e) {
+            const menu = document.getElementById('profileMenu');
+            const profileImg = document.querySelector('img[alt="Profile Picture"]');
+
+            // If the click is outside both the menu and the image, close it
+            if (!menu.contains(e.target) && e.target !== profileImg) {
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                    setTimeout(() => menu.classList.add('hidden'), 250);
+                }
+            }
+        });
+    </script>
+
+    
         <!--------------------------------------------------------------------------
         | TABS
         |-------------------------------------------------------------------------->
@@ -230,43 +270,10 @@
         </div>
 
     </div>
- 
-    <style>
-        /* Profile dropdown animation */
-        #profileMenu.show {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-        }
 
-        /* Mobile-friendly adjustments */
-        @media (max-width: 480px) {
-            #profileMenu {
-                right: 10px !important;
-                top: 80px !important;
-                width: 80% !important;
-                font-size: 14px;
-            }
-            #profileMenu button {
-                font-size: 14px !important;
-                padding: 10px 0 !important;
-            }
-        }
-    </style>
-
-    <script>
-        document.addEventListener('click', function (e) {
-            const menu = document.getElementById('profileMenu');
-            const profileImg = document.querySelector('img[alt="Profile Picture"]');
-
-            // If the click is outside both the menu and the image, close it
-            if (!menu.contains(e.target) && e.target !== profileImg) {
-                if (menu.classList.contains('show')) {
-                    menu.classList.remove('show');
-                    setTimeout(() => menu.classList.add('hidden'), 250);
-                }
-            }
-        });
-    </script>
+    <!--------------------------------------------------------------------------
+    | LOGOUT
+    |-------------------------------------------------------------------------->
 
     <script>
         // If user is logged out but the browser cached this page, redirect home

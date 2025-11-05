@@ -22,6 +22,12 @@
             font-family: 'Poppins', sans-serif;
         }
     </style>
+
+    <style>
+    .fuel-card { transition: all 0.2s ease; }
+    .fuel-card:hover { transform: scale(1.05); }
+    </style>
+
 </head>
 <body>
 
@@ -55,16 +61,17 @@
 
     <div id="frame" style="position:relative;width:430px;height:932px;background:#000919;transform-origin:center center;">
         <div style="width:501px;height:993px;left:-42px;top:0;position:absolute;background:#000919;box-shadow:0 4px 4px rgba(0,0,0,0.25)"></div>
-        <div style="position:absolute;top:155px;left:0;width:100%;height:calc(932px - 155px + 150px);background:rgba(217,217,217,0.74);opacity:0.07;border-radius:41px;bottom:-150px;"></div>
-
+       
         <!-- Dashboard button -->
         <img src="{{ asset('dimages/dashboardbutton.png') }}" alt="Dashboard Button" draggable="false"
-            style="width:192px;height:52px;left:20px;top:78px;position:absolute;cursor:pointer;transition:transform 0.15s ease;"
+            style="width:192px;height:52px;left:20px;top:78px;position:absolute;cursor:pointer;transition:transform 0.15s ease; z-index:20;"
             onmousedown="this.style.transform='scale(1.1)'" onmouseup="this.style.transform='scale(1)'"
             onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
             ontouchend="this.style.transform='scale(1)'" onclick="window.location.href='{{ route('user.home', ['username' => Auth::user()->name]) }}'">
 
-        <!-- Profile Picture Button (replaces login button for logged users) -->
+    <!--------------------------------------------------------------------------
+    | USER PROFILE PICTURE
+    |-------------------------------------------------------------------------->
         <img src="{{ $user->profile_picture 
             ? asset('storage/' . $user->profile_picture) 
             : asset('images/default-profile.png') }}"
@@ -72,7 +79,7 @@
             draggable="false"
             style="width:40px;height:40px;left:371.85px;top:89.97px;position:absolute;
                 border-radius:50%;object-fit:cover;cursor:pointer;
-                transition:transform 0.15s ease;"
+                transition:transform 0.15s ease; z-index:20;"
             onmousedown="this.style.transform='scale(1.1)'"
             onmouseup="this.style.transform='scale(1)'"
             onmouseleave="this.style.transform='scale(1)'"
@@ -128,8 +135,8 @@
                 </button>
             </form>
         </div>
- 
-    <style>
+
+            <style>
         /* Profile dropdown animation */
         #profileMenu.show {
             opacity: 1 !important;
@@ -149,9 +156,11 @@
                 padding: 10px 0 !important;
             }
         }
+
+        
     </style>
 
-    <script>
+        <script>
         document.addEventListener('click', function (e) {
             const menu = document.getElementById('profileMenu');
             const profileImg = document.querySelector('img[alt="Profile Picture"]');
@@ -165,6 +174,139 @@
             }
         });
     </script>
+        
+
+
+    <!--------------------------------------------------------------------------
+    | OIL SELECTION
+    |-------------------------------------------------------------------------->
+ <div id="slideWrapper" class="slide-wrapper">
+        <div style="position:absolute;top:155px;left:0;width:100%;height:calc(932px - 155px + 150px);background:rgba(217,217,217,0.74);opacity:0.07;border-radius:41px;bottom:-150px;"></div>
+
+        <img src="{{ asset('checkout/oil.png') }}" alt="Image 50" draggable="false"
+            style="top:192px; left:27px; width:40px;height:46px;position:absolute;">
+
+        <div data-layer="Fuel delivered 24/7, the same price as the petrol station" class="FuelDelivered247TheSamePriceAsThePetrolStation w-64 h-12 left-[80px] top-[189px] absolute justify-center">
+            <span class="text-white text-base font-semibold font-['Poppins']">Fuel delivered </span>
+            <span class="text-yellow-400 text-base font-semibold font-['Poppins']">24/7</span>
+            <span class="text-white text-base font-semibold font-['Poppins']">, the same price as the petrol station</span>
+        </div>
+        <div data-layer="choose your fuel type" class="ChooseYourFuelType w-36 h-3.5 left-[80px] top-[243px] absolute justify-center text-neutral-400 text-xs font-['Poppins']">choose your fuel type</div>
+
+        <!-- Petrol Fuels Section -->
+        <div data-layer="Petrol fuels" class="PetrolFuels w-24 h-4 left-[29px] top-[280px] absolute justify-center text-white text-base font-semibold font-['Poppins']">Petrol fuels</div>
+      
+        <!-- Diesel Fuels Section -->
+        <div data-layer="Diesel fuels" class="DieselFuels w-24 h-4 left-[29px] top-[538px] absolute justify-center text-white text-base font-semibold font-['Poppins']">Diesel fuels</div>
+        
+        <!-- V-Power RON 97 -->
+        <div id="vpower97" class="fuel-card w-28 h-48 left-[27px] top-[318px] absolute bg-zinc-300/10 rounded-[10px] cursor-pointer transition"
+            onclick="selectFuel('vpower97', 'V-Power RON97')"></div>
+        <img class="w-16 h-32 left-[52px] top-[340px] absolute pointer-events-none" src="{{ asset('checkout/rednozzle.png') }}">
+        <div class="w-28 left-[27px] top-[474px] absolute text-center text-white text-[10px] font-bold font-['Poppins']">V-Power RON 97</div>
+        <div class="w-9 h-3.5 left-[66px] top-[489px] absolute text-neutral-400 text-[9px] font-['Poppins']">B$0.88/L</div>
+
+        <!-- Premium RON 97 -->
+        <div id="premium97" class="fuel-card w-28 h-48 left-[157px] top-[318px] absolute bg-zinc-300/10 rounded-[10px] cursor-pointer transition"
+            onclick="selectFuel('premium97', 'Premium RON97')"></div>
+        <img class="w-16 h-32 left-[183px] top-[340px] absolute pointer-events-none" src="{{ asset('checkout/greennozzle.png') }}">
+        <div class="w-28 left-[157px] top-[474px] absolute text-center text-white text-[10px] font-bold font-['Poppins']">Premium RON 97</div>
+        <div class="w-9 h-3.5 left-[196px] top-[489px] absolute text-neutral-400 text-[9px] font-['Poppins']">B$0.53/L</div>
+
+        <!-- Regular RON 85 -->
+        <div id="regular85" class="fuel-card w-28 h-48 left-[287px] top-[318px] absolute bg-zinc-300/10 rounded-[10px] cursor-pointer transition"
+            onclick="selectFuel('regular85', 'Regular RON85')"></div>
+        <img class="w-16 h-32 left-[312px] top-[340px] absolute pointer-events-none" src="{{ asset('checkout/yellownozzle.png') }}">
+        <div class="w-28 left-[287px] top-[474px] absolute text-center text-white text-[10px] font-bold font-['Poppins']">Regular RON 85</div>
+        <div class="w-9 h-3.5 left-[326px] top-[489px] absolute text-neutral-400 text-[9px] font-['Poppins']">B$0.36/L</div>
+
+        <!-- V-Power Diesel -->
+        <div id="vpowerdiesel" class="fuel-card w-28 h-48 left-[27px] top-[576px] absolute bg-zinc-300/10 rounded-[10px] cursor-pointer transition"
+            onclick="selectFuel('vpowerdiesel', 'V-Power Diesel')"></div>
+        <img class="w-16 h-32 left-[52px] top-[598px] absolute pointer-events-none" src="{{ asset('checkout/greynozzle.png') }}">
+        <div class="w-28 left-[27px] top-[732px] absolute text-center text-white text-[10px] font-bold font-['Poppins']">V-Power Diesel</div>
+        <div class="w-9 h-3.5 left-[66px] top-[747px] absolute text-neutral-400 text-[9px] font-['Poppins']">B$0.95/L</div>
+
+        <!-- Diesel -->
+        <div id="diesel" class="fuel-card w-28 h-48 left-[157px] top-[576px] absolute bg-zinc-300/10 rounded-[10px] cursor-pointer transition"
+            onclick="selectFuel('diesel', 'Diesel')"></div>
+        <img class="w-16 h-32 left-[183px] top-[598px] absolute pointer-events-none" src="{{ asset('checkout/blacknozzle.png') }}">
+        <div class="w-28 left-[157px] top-[732px] absolute text-center text-white text-[10px] font-bold font-['Poppins']">Diesel</div>
+        <div class="w-8 h-3.5 left-[198px] top-[747px] absolute text-neutral-400 text-[9px] font-['Poppins']">B$0.31/L</div>
+
+        <!-- Confirm Button -->
+        <div id="confirmButton"
+            class="absolute w-96 h-12 left-[27px] top-[850px] rounded-[33px] flex justify-center items-center cursor-not-allowed transition-all duration-200"
+            style="background: #4B5563;">
+        <span id="confirmBtnText" class="text-white text-base font-bold font-['Poppins'] opacity-50">
+            CONFIRM FUEL
+        </span>
+        </div>
+</div>
+        <script>
+        let selectedFuel = null;
+
+        function selectFuel(id, label) {
+            // remove highlight from all
+            document.querySelectorAll('.fuel-card').forEach(card => {
+            card.style.outline = 'none';
+            card.style.boxShadow = 'none';
+            card.style.background = 'rgba(255,255,255,0.05)';
+            });
+
+            // highlight selected
+            const selected = document.getElementById(id);
+            selected.style.outline = '2px solid #FFE100';
+            selected.style.boxShadow = '0 0 12px #FFE100AA';
+            selected.style.background = 'rgba(255,255,255,0.1)';
+            selectedFuel = id;
+
+            // activate confirm button
+            const confirmBtn = document.getElementById('confirmButton');
+            const confirmText = document.getElementById('confirmBtnText');
+            confirmBtn.style.background = '#760000'; // red
+            confirmBtn.style.cursor = 'pointer';
+            confirmText.style.opacity = '1';
+            confirmText.textContent = 'CONFIRM ' + label.toUpperCase();
+
+            confirmBtn.onclick = () => {
+                window.location.href = "{{ route('checkout.location') }}";
+            };
+
+            };
+        </script>
+
+        <style>
+        .slide-wrapper {
+            position: absolute;
+            top: 932px; /* start off-screen below */
+            left: 0;
+            width: 100%;
+            height: 932px;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .slide-wrapper.show {
+            top: 0; /* move into visible frame */
+            opacity: 1;
+            transform: translateY(0);
+        }
+        </style>
+
+        <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+            document.getElementById('slideWrapper').classList.add('show');
+            }, 200);
+        });
+        </script>
+
+
+    <!--------------------------------------------------------------------------
+    | LOGOUT
+    |-------------------------------------------------------------------------->
 
     <script>
         // If user is logged out but the browser cached this page, redirect home
