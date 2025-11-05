@@ -4,8 +4,11 @@ use App\Models\User;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt as LivewireVolt;
 
+<<<<<<< HEAD
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
+=======
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
 test('login screen can be rendered', function () {
     $response = $this->get(route('login'));
 

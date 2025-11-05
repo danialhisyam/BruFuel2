@@ -4,9 +4,9 @@ use App\Models\User;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 
+HEAD
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
-beforeEach(function () {
     if (! Features::canManageTwoFactorAuthentication()) {
         $this->markTestSkipped('Two-factor authentication is not enabled.');
     }
@@ -15,7 +15,6 @@ beforeEach(function () {
         'confirm' => true,
         'confirmPassword' => true,
     ]);
-});
 
 test('two factor settings page can be rendered', function () {
     $user = User::factory()->withoutTwoFactor()->create();

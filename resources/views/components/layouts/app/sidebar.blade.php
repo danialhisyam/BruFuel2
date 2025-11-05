@@ -1,5 +1,9 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+=======
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
     <head>
         @include('partials.head')
     </head>
@@ -31,6 +35,7 @@
 
             <!-- Desktop User Menu -->
             <flux:dropdown class="hidden lg:block" position="bottom" align="start">
+<<<<<<< HEAD
                 @auth
                     <flux:profile
                         :name="auth()->user()->name"
@@ -46,6 +51,14 @@
                         data-test="sidebar-menu-button"
                     />
                 @endauth
+=======
+                <flux:profile
+                    :name="auth()->user()->name"
+                    :initials="auth()->user()->initials()"
+                    icon:trailing="chevrons-up-down"
+                    data-test="sidebar-menu-button"
+                />
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
 
                 <flux:menu class="w-[220px]">
                     <flux:menu.radio.group>
@@ -55,15 +68,20 @@
                                     <span
                                         class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
                                     >
+<<<<<<< HEAD
                                         @auth
                                             {{ auth()->user()->initials() }}
                                         @else
                                             G
                                         @endauth
+=======
+                                        {{ auth()->user()->initials() }}
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
                                     </span>
                                 </span>
 
                                 <div class="grid flex-1 text-start text-sm leading-tight">
+<<<<<<< HEAD
                                     <span class="truncate font-semibold">
                                         @auth
                                             {{ auth()->user()->name }}
@@ -78,6 +96,10 @@
                                             guest@example.com
                                         @endauth
                                     </span>
+=======
+                                    <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
+                                    <span class="truncate text-xs">{{ auth()->user()->email }}</span>
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
                                 </div>
                             </div>
                         </div>
@@ -86,6 +108,10 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
+<<<<<<< HEAD
+=======
+                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
                     </flux:menu.radio.group>
 
                     <flux:menu.separator />
@@ -98,7 +124,10 @@
                     </form>
                 </flux:menu>
             </flux:dropdown>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
         </flux:sidebar>
 
         <!-- Mobile User Menu -->
@@ -108,6 +137,7 @@
             <flux:spacer />
 
             <flux:dropdown position="top" align="end">
+<<<<<<< HEAD
                 @auth
                     <flux:profile
                         :initials="auth()->user()->initials()"
@@ -119,6 +149,12 @@
                         icon-trailing="chevron-down"
                     />
                 @endauth
+=======
+                <flux:profile
+                    :initials="auth()->user()->initials()"
+                    icon-trailing="chevron-down"
+                />
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
 
                 <flux:menu>
                     <flux:menu.radio.group>
@@ -128,15 +164,20 @@
                                     <span
                                         class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
                                     >
+<<<<<<< HEAD
                                         @auth
                                             {{ auth()->user()->initials() }}
                                         @else
                                             G
                                         @endauth
+=======
+                                        {{ auth()->user()->initials() }}
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
                                     </span>
                                 </span>
 
                                 <div class="grid flex-1 text-start text-sm leading-tight">
+<<<<<<< HEAD
                                     <span class="truncate font-semibold">
                                         @auth
                                             {{ auth()->user()->name }}
@@ -151,6 +192,10 @@
                                             guest@example.com
                                         @endauth
                                     </span>
+=======
+                                    <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
+                                    <span class="truncate text-xs">{{ auth()->user()->email }}</span>
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
                                 </div>
                             </div>
                         </div>
@@ -159,6 +204,10 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
+<<<<<<< HEAD
+=======
+                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
                     </flux:menu.radio.group>
 
                     <flux:menu.separator />

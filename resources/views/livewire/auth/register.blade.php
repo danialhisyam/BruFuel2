@@ -3,6 +3,10 @@
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
+<<<<<<< HEAD
+=======
+use Illuminate\Support\Facades\Hash;
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
@@ -25,6 +29,11 @@ new #[Layout('components.layouts.auth')] class extends Component {
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 
+<<<<<<< HEAD
+=======
+        $validated['password'] = Hash::make($validated['password']);
+
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
         event(new Registered(($user = User::create($validated))));
 
         Auth::login($user);
@@ -36,7 +45,11 @@ new #[Layout('components.layouts.auth')] class extends Component {
 }; ?>
 
 <div class="flex flex-col gap-6">
+<<<<<<< HEAD
     <x-auth-header :title="__('Create an account')" :description="__('Enter your details below to create your account')" />
+=======
+    <x-auth-header :title="__('Create an account')" :description="__('Enter your details below to edit your account')" />
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
 
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />

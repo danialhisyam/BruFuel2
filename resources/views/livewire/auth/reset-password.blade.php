@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Auth\Events\PasswordReset;
+<<<<<<< HEAD
+=======
+use Illuminate\Support\Facades\Hash;
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -44,7 +48,11 @@ new #[Layout('components.layouts.auth')] class extends Component {
             $this->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) {
                 $user->forceFill([
+<<<<<<< HEAD
                     'password' => $this->password,
+=======
+                    'password' => Hash::make($this->password),
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
                     'remember_token' => Str::random(60),
                 ])->save();
 

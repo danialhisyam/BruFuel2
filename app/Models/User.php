@@ -33,7 +33,11 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'two_factor_secret',
+<<<<<<< HEAD
         'two_factor_recovery_codes',
+=======
+        'two_factory_recovery_codes',
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
         'remember_token',
     ];
 

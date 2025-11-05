@@ -1,5 +1,9 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+=======
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
     <head>
         @include('partials.head')
     </head>
@@ -73,6 +77,10 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
+<<<<<<< HEAD
+=======
+                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
                     </flux:menu.radio.group>
 
                     <flux:menu.separator />

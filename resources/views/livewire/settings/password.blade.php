@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+<<<<<<< HEAD
+=======
+use Illuminate\Support\Facades\Hash;
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use Livewire\Volt\Component;
@@ -27,7 +31,11 @@ new class extends Component {
         }
 
         Auth::user()->update([
+<<<<<<< HEAD
             'password' => $validated['password'],
+=======
+            'password' => Hash::make($validated['password']),
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
         ]);
 
         $this->reset('current_password', 'password', 'password_confirmation');

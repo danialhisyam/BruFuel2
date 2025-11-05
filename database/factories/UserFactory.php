@@ -3,6 +3,10 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+<<<<<<< HEAD
+=======
+use Illuminate\Support\Facades\Hash;
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
 use Illuminate\Support\Str;
 
 /**
@@ -26,7 +30,11 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
+<<<<<<< HEAD
             'password' => static::$password ??= 'password',
+=======
+            'password' => static::$password ??= Hash::make('password'),
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
             'remember_token' => Str::random(10),
             'two_factor_secret' => Str::random(10),
             'two_factor_recovery_codes' => Str::random(10),

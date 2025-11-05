@@ -5,8 +5,11 @@ use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Volt\Volt;
 
+<<<<<<< HEAD
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
+=======
+>>>>>>> 9274150457084e72d569d3ae769f1817318a4c10
 test('reset password link screen can be rendered', function () {
     $response = $this->get(route('password.request'));
 
