@@ -21,12 +21,13 @@ User::firstOrCreate(
         'password' => Hash::make('password123'),
     ]
 );
-
-
-
         // Call other seeders here
         $this->call([
             DriverSeeder::class, // Make sure you’ve created this seeder
         ]);
     }
+
+    public function run(): void
+{
+    $this->call(UserSeeder::class);
 }

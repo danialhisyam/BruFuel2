@@ -9,6 +9,7 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -217,3 +218,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
   Route::put('/drivers/{driver}', [\App\Http\Controllers\Admin\DriverController::class,'update'])->name('drivers.update');
   Route::delete('/drivers/{driver}', [\App\Http\Controllers\Admin\DriverController::class,'destroy'])->name('drivers.destroy');
 });
+
+Route::middleware(['auth','role:admin'])
+    ->prefix('admin')->name('admin.')
+    ->group(function () {
+        // keep the page route
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
+        // NEW: data route for your table
+        Route::get('/users/data', [UserController::class, 'data'])->name('users.data');
+    });

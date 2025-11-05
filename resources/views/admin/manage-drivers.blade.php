@@ -287,47 +287,6 @@
     </form>
   </div>
 </div>
-
-
-      {{-- Edit form (uses fetch PUT to /admin/drivers/{id}) --}}
-      <form @submit.prevent="submitEdit">
-        <label class="block mb-2 text-sm">Name
-          <input x-model="form.name" class="w-full px-3 py-2 bg-slate-800 rounded" required>
-        </label>
-
-        <label class="block mb-2 text-sm">Email
-          <input x-model="form.email" type="email" class="w-full px-3 py-2 bg-slate-800 rounded">
-        </label>
-
-        <label class="block mb-2 text-sm">Phone
-          <input x-model="form.phone" class="w-full px-3 py-2 bg-slate-800 rounded">
-        </label>
-
-        <label class="block mb-2 text-sm">License Type
-          <input x-model="form.license_type" class="w-full px-3 py-2 bg-slate-800 rounded">
-        </label>
-
-        <label class="block mb-4 text-sm">Expiry
-          <input x-model="form.license_expiry" type="date" class="w-full px-3 py-2 bg-slate-800 rounded">
-        </label>
-
-        <label class="block mb-4 text-sm">Status
-          <select x-model="form.status" class="w-full px-3 py-2 bg-slate-800 rounded">
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
-        </label>
-
-        <div class="flex justify-end gap-3">
-          <button type="button" @click="modalOpen=false" class="px-4 py-2 rounded bg-gray-700">Cancel</button>
-         <button type="submit"
-        class="px-4 py-2 rounded bg-blue-600"
-        @click.prevent="mode === 'create' ? submitCreate() : submitEdit()"
-        x-text="mode === 'create' ? 'Create' : 'Save'">
-</button>
-
-        </div>
-      </form>
     </div>
   </div>
 
