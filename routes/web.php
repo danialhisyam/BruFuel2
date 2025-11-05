@@ -23,7 +23,14 @@ use Livewire\Volt\Volt;
 | NOTE: If you want a custom landing page instead of redirecting to /login,
 | change the first line to: Route::view('/', 'CompanySelectection')->name('welcome');
 */
-Route::view('/', '/mobile/home')->name('home');
+Route::get('/', function () {
+    return view('loading');
+})->name('loading');
+
+// Step 2: After loading → go to /home
+Route::get('/home', function () {
+    return view('mobile.home'); // your normal home page
+})->name('home');
 
 // Fortify custom views MUST be registered before auth routes
 Fortify::loginView(fn () => view('auth.login'));
