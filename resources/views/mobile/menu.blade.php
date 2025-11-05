@@ -94,78 +94,93 @@
       ontouchend="this.style.transform='scale(1)'"
       onclick="window.location.href='{{ route('mobile.menu') }}'">
 
-        <!-- My Profile -->
-        <div style="position:absolute;left:24px;top:260px;cursor:pointer;transition:transform 0.15s ease;"
-        onmousedown="this.style.transform='scale(1.03)'"
-        onmouseup="this.style.transform='scale(1)'"
-        onmouseleave="this.style.transform='scale(1)'"
-        ontouchstart="this.style.transform='scale(1.03)'"
-        ontouchend="this.style.transform='scale(1)'">
-        <div class="Rectangle43" style="width:383px;height:47px;background:rgba(217,217,217,0.13);border-radius:15px;"></div>
-        <div class="MyProfile" style="position:absolute;left:60px;top:13px;color:white;font-size:15px;font-family:Poppins;font-weight:600;">My Profile</div>
-        <img src="{{ asset('mimages/Profile.png') }}" alt="icon" width="19" height="19" style="position:absolute;left:20px;top:13px;">
-        </div>
+    <!-- My Profile -->
+    <div style="position:absolute;left:24px;top:260px;cursor:pointer;transition:transform 0.15s ease;"
+      onmousedown="this.style.transform='scale(1.03)'"
+      onmouseup="this.style.transform='scale(1)'"
+      onmouseleave="this.style.transform='scale(1)'"
+      ontouchstart="this.style.transform='scale(1.03)'"
+      ontouchend="this.style.transform='scale(1)'">
+      <div class="Rectangle43" style="width:383px;height:47px;background:rgba(217,217,217,0.13);border-radius:15px;"></div>
+      <div class="MyProfile" style="position:absolute;left:60px;top:13px;color:white;font-size:15px;font-family:Poppins;font-weight:600;">My Profile</div>
+      <img src="{{ asset('mimages/Profile.png') }}" alt="icon" width="19" height="19" style="position:absolute;left:20px;top:13px;">
+    </div>
 
-        <!-- My Payments -->
-        <div style="position:absolute;left:24px;top:320px;cursor:pointer;transition:transform 0.15s ease;"
-        onmousedown="this.style.transform='scale(1.03)'"
-        onmouseup="this.style.transform='scale(1)'"
-        onmouseleave="this.style.transform='scale(1)'"
-        ontouchstart="this.style.transform='scale(1.03)'"
-        ontouchend="this.style.transform='scale(1)'">
-        <div class="Rectangle44" style="width:383px;height:47px;background:rgba(217,217,217,0.13);border-radius:15px;"></div>
-        <div class="MyPayments" style="position:absolute;left:60px;top:13px;color:white;font-size:15px;font-family:Poppins;font-weight:600;">My Payments</div>
-        <img src="{{ asset('mimages/Payments.png') }}" alt="icon" width="20" height="20" style="position:absolute;left:20px;top:13px;">
-        </div>
+    <!-- My Payments -->
+    <div style="position:absolute;left:24px;top:320px;cursor:pointer;transition:transform 0.15s ease;"
+      onmousedown="this.style.transform='scale(1.03)'"
+      onmouseup="this.style.transform='scale(1)'"
+      onmouseleave="this.style.transform='scale(1)'"
+      ontouchstart="this.style.transform='scale(1.03)'"
+      ontouchend="this.style.transform='scale(1)'">
+      <div class="Rectangle44" style="width:383px;height:47px;background:rgba(217,217,217,0.13);border-radius:15px;"></div>
+      <div class="MyPayments" style="position:absolute;left:60px;top:13px;color:white;font-size:15px;font-family:Poppins;font-weight:600;">My Payments</div>
+      <img src="{{ asset('mimages/Payments.png') }}" alt="icon" width="20" height="20" style="position:absolute;left:20px;top:13px;">
+    </div>
 
-        <!-- General -->
-        <div style="position:absolute;left:24px;top:380px;cursor:pointer;transition:transform 0.15s ease;"
-        onmousedown="this.style.transform='scale(1.03)'"
-        onmouseup="this.style.transform='scale(1)'"
-        onmouseleave="this.style.transform='scale(1)'"
-        ontouchstart="this.style.transform='scale(1.03)'"
-        ontouchend="this.style.transform='scale(1)'">
-        <div class="Rectangle47" style="width:383px;height:47px;background:rgba(217,217,217,0.13);border-radius:15px;"></div>
-        <div class="General" style="position:absolute;left:60px;top:13px;color:white;font-size:15px;font-family:Poppins;font-weight:600;">General</div>
-        <img src="{{ asset('mimages/General.png') }}" alt="icon" width="20" height="20" style="position:absolute;left:20px;top:13px;">
-        </div>
+    <!-- General -->
+    <div style="position:absolute;left:24px;top:380px;cursor:pointer;transition:transform 0.15s ease;"
+      onmousedown="this.style.transform='scale(1.03)'"
+      onmouseup="this.style.transform='scale(1)'"
+      onmouseleave="this.style.transform='scale(1)'"
+      ontouchstart="this.style.transform='scale(1.03)'"
+      ontouchend="this.style.transform='scale(1)'">
+      <div class="Rectangle47" style="width:383px;height:47px;background:rgba(217,217,217,0.13);border-radius:15px;"></div>
+      <div class="General" style="position:absolute;left:60px;top:13px;color:white;font-size:15px;font-family:Poppins;font-weight:600;">General</div>
+      <img src="{{ asset('mimages/General.png') }}" alt="icon" width="20" height="20" style="position:absolute;left:20px;top:13px;">
+    </div>
 
-        <!-- Help FAQ -->
-        <div style="position:absolute;left:24px;top:440px;cursor:pointer;transition:transform 0.15s ease;"
-        onmousedown="this.style.transform='scale(1.03)'"
-        onmouseup="this.style.transform='scale(1)'"
-        onmouseleave="this.style.transform='scale(1)'"
-        ontouchstart="this.style.transform='scale(1.03)'"
-        ontouchend="this.style.transform='scale(1)'">
-        <div class="Rectangle48" style="width:383px;height:47px;background:rgba(217,217,217,0.13);border-radius:15px;"></div>
-        <div class="HelpFaq" style="position:absolute;left:60px;top:13px;color:white;font-size:15px;font-family:Poppins;font-weight:600;">Help FAQ</div>
-        <img src="{{ asset('mimages/FAQ.png') }}" alt="icon" width="20" height="20" style="position:absolute;left:20px;top:13px;">
-        </div>
+    <!-- Help FAQ -->
+    <div style="position:absolute;left:24px;top:440px;cursor:pointer;transition:transform 0.15s ease;"
+      onmousedown="this.style.transform='scale(1.03)'"
+      onmouseup="this.style.transform='scale(1)'"
+      onmouseleave="this.style.transform='scale(1)'"
+      ontouchstart="this.style.transform='scale(1.03)'"
+      ontouchend="this.style.transform='scale(1)'">
+      <div class="Rectangle48" style="width:383px;height:47px;background:rgba(217,217,217,0.13);border-radius:15px;"></div>
+      <div class="HelpFaq" style="position:absolute;left:60px;top:13px;color:white;font-size:15px;font-family:Poppins;font-weight:600;">Help FAQ</div>
+      <img src="{{ asset('mimages/FAQ.png') }}" alt="icon" width="20" height="20" style="position:absolute;left:20px;top:13px;">
+    </div>
 
-        <!-- Contact Customer Support -->
-        <div style="position:absolute;left:24px;top:500px;cursor:pointer;transition:transform 0.15s ease;"
-        onmousedown="this.style.transform='scale(1.03)'"
-        onmouseup="this.style.transform='scale(1)'"
-        onmouseleave="this.style.transform='scale(1)'"
-        ontouchstart="this.style.transform='scale(1.03)'"
-        ontouchend="this.style.transform='scale(1)'">
-        <div class="Rectangle49" style="width:383px;height:47px;background:rgba(217,217,217,0.13);border-radius:15px;"></div>
-        <div class="ContactCustomerSupport" style="position:absolute;left:60px;top:13px;color:white;font-size:15px;font-family:Poppins;font-weight:600;">Contact Customer Support</div>
-        <img src="{{ asset('mimages/CCS.png') }}" alt="icon" width="20" height="20" style="position:absolute;left:20px;top:13px;">
-        </div>
+    <!-- Contact Customer Support -->
+    <div style="position:absolute;left:24px;top:500px;cursor:pointer;transition:transform 0.15s ease;"
+      onmousedown="this.style.transform='scale(1.03)'"
+      onmouseup="this.style.transform='scale(1)'"
+      onmouseleave="this.style.transform='scale(1)'"
+      ontouchstart="this.style.transform='scale(1.03)'"
+      ontouchend="this.style.transform='scale(1)'">
+      <div class="Rectangle49" style="width:383px;height:47px;background:rgba(217,217,217,0.13);border-radius:15px;"></div>
+      <div class="ContactCustomerSupport" style="position:absolute;left:60px;top:13px;color:white;font-size:15px;font-family:Poppins;font-weight:600;">Contact Customer Support</div>
+      <img src="{{ asset('mimages/CCS.png') }}" alt="icon" width="20" height="20" style="position:absolute;left:20px;top:13px;">
+    </div>
 
-        <!-- Report -->
-        <div style="position:absolute;left:24px;top:560px;cursor:pointer;transition:transform 0.15s ease;"
+    <!-- Report -->
+    <div style="position:absolute;left:24px;top:560px;cursor:pointer;transition:transform 0.15s ease;"
+      onmousedown="this.style.transform='scale(1.03)'"
+      onmouseup="this.style.transform='scale(1)'"
+      onmouseleave="this.style.transform='scale(1)'"
+      ontouchstart="this.style.transform='scale(1.03)'"
+      ontouchend="this.style.transform='scale(1)'">
+      <div class="Rectangle51" style="width:383px;height:47px;background:rgba(217,217,217,0.13);border-radius:15px;"></div>
+      <div class="Report" style="position:absolute;left:60px;top:13px;color:#ff4d4d;font-size:15px;font-family:Poppins;font-weight:600;">Report</div>
+      <img src="{{ asset('mimages/report.png') }}" alt="icon" width="20" height="20" style="position:absolute;left:20px;top:13px;">
+    </div>
+
+    <!-- ✅ Logout -->
+    <form method="POST" action="{{ route('logout') }}">
+      @csrf
+      <button type="submit" style="position:absolute;left:24px;top:620px;width:383px;height:47px;background:rgba(217,217,217,0.13);border:none;border-radius:15px;cursor:pointer;transition:transform 0.15s ease;"
         onmousedown="this.style.transform='scale(1.03)'"
         onmouseup="this.style.transform='scale(1)'"
         onmouseleave="this.style.transform='scale(1)'"
         ontouchstart="this.style.transform='scale(1.03)'"
         ontouchend="this.style.transform='scale(1)'">
-        <div class="Rectangle51" style="width:383px;height:47px;background:rgba(217,217,217,0.13);border-radius:15px;"></div>
-        <div class="Report" style="position:absolute;left:60px;top:13px;color:white;font-size:15px;font-family:Poppins;font-weight:600;">Report</div>
-        <img src="{{ asset('mimages/report.png') }}" alt="icon" width="20" height="20" style="position:absolute;left:20px;top:13px;">
-        </div>
+        <div style="position:absolute;left:60px;top:13px;color:#ff4d4d;font-size:15px;font-family:Poppins;font-weight:600;">Logout</div>
+        <img src="{{ asset('mimages/logout.png') }}" alt="icon" width="20" height="20" style="position:absolute;left:20px;top:13px;">
+      </button>
+    </form>
+
   </div>
 
-  </body>
+</body>
 </html>

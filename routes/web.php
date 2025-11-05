@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+use App\Models\User;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Features;
 
@@ -10,14 +13,17 @@ use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
 
+// Livewire Forgot Password
+use Livewire\Volt\Volt;
+
 /*
 |--------------------------------------------------------------------------
 | Public
 |--------------------------------------------------------------------------
 | NOTE: If you want a custom landing page instead of redirecting to /login,
-| change the first line to: Route::view('/', 'ComapnySelectection')->name('welcome');
+| change the first line to: Route::view('/', 'CompanySelectection')->name('welcome');
 */
-Route::view('/','/mobile/home')->name('home');
+Route::view('/', '/mobile/home')->name('home');
 
 // Fortify custom views MUST be registered before auth routes
 Fortify::loginView(fn () => view('auth.login'));
@@ -31,6 +37,26 @@ Route::middleware('guest')->group(function () {
 
     if (Features::enabled(Features::registration())) {
         Route::get('/register', fn () => view('auth.register'))->name('register');
+
+        // ✅ Custom Register POST route (redirect to login after account creation)
+        Route::post('/register', function (Request $request) {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|confirmed|min:8',
+            ]);
+
+            // ✅ Create user and assign default "customer" role
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            $user->assignRole('customer');
+
+            return redirect('/login')->with('status', 'Account created successfully! Please log in.');
+        });
     }
 });
 
@@ -48,14 +74,13 @@ Route::get('/redirect-dashboard', function () {
     if ($user->hasRole('admin')) {
         return redirect()->route('admin.dashboard');
     }
+
     if ($user->hasRole('driver')) {
         return redirect()->route('driver.trips');
     }
-    if ($user->hasRole('customer')) {
-        return redirect()->route('mobile.home');
-    }
 
-    abort(403, 'No role assigned.');
+    // ✅ Default redirect for customers or users without a role
+    return redirect()->route('mobile.home');
 })->middleware('auth')->name('redirect.dashboard');
 
 // Stable alias used by many libs
@@ -82,8 +107,6 @@ Route::middleware(['auth', 'role:admin'])
 /*
 |--------------------------------------------------------------------------
 | Driver
-| - Keeps your custom driver login controller/routes under /driver/*
-| - Driver pages themselves require the 'driver' role.
 |--------------------------------------------------------------------------
 */
 // Legacy .html redirects
@@ -118,13 +141,13 @@ Route::middleware(['auth', 'role:customer'])
     ->prefix('mobile')
     ->name('mobile.')
     ->group(function () {
-        Route::view('/home',     'mobile.home')->name('home');
-        Route::view('/dashboard','mobile.dashboard')->name('dashboard'); // ensure file exists at resources/views/mobile/dashboard.blade.php
-        Route::view('/history',  'mobile.history')->name('history');
-        Route::view('/login',    'mobile.login')->name('login');
-        Route::view('/menu',     'mobile.menu')->name('menu');
-        Route::view('/signup',   'mobile.signup')->name('signup');        // rename from 'sign' -> 'signup'
-        Route::view('/welcome',  'mobile.welcome')->name('welcome');
+        Route::view('/home', 'mobile.home')->name('home');
+        Route::view('/dashboard', 'mobile.dashboard')->name('dashboard');
+        Route::view('/history', 'mobile.history')->name('history');
+        Route::view('/login', 'mobile.login')->name('login');
+        Route::view('/menu', 'mobile.menu')->name('menu');
+        Route::view('/signup', 'mobile.signup')->name('signup');
+        Route::view('/welcome', 'mobile.welcome')->name('welcome');
     });
 
 /*
@@ -139,7 +162,6 @@ Route::middleware('auth')->group(function () {
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 
-    // Conditionally require password.confirm for 2FA page
     Route::get('settings/two-factor', TwoFactor::class)
         ->middleware(
             when(
@@ -165,16 +187,16 @@ Route::prefix('testing')->name('testing.')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| For Auth Login
+| For Auth Login + Forgot Password
 |--------------------------------------------------------------------------
 */
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::redirect('/login', 'auth.login')->name('login');
     Route::view('/register', 'auth.register')->name('register');
-    Route::view('/forgot-password', 'auth.forgot-password')->name('forgot-password');
 });
 
-
+// ✅ Forgot Password route must be outside prefix('auth')
+Volt::route('/forgot-password', 'auth.forgot-password')->name('password.request');
 
 /*
 |--------------------------------------------------------------------------
@@ -188,14 +210,20 @@ Route::get('/force-logout', function () {
     return redirect('/login');
 });
 
-// Legacy driver redirects that point to public login or protected dashboard
+// Legacy driver redirects
 Route::redirect('/driver/login.html', '/driver/login', 301);
 
 use App\Http\Controllers\Admin\PaymentController;
-Route::get('/admin/payments', [PaymentController::class, 'index'])->name('admin.payments');
 
 Route::prefix('admin')->group(function () {
-Route::get('/payments', [PaymentController::class, 'index'])->name('admin.payments');
-    Route::get('/payments/export/csv',   [PaymentController::class, 'exportCsv'])->name('admin.payments.export.csv');
+    Route::get('/payments', [PaymentController::class, 'index'])->name('admin.payments');
+    Route::get('/payments/export/csv', [PaymentController::class, 'exportCsv'])->name('admin.payments.export.csv');
     Route::get('/payments/export/excel', [PaymentController::class, 'exportExcel'])->name('admin.payments.export.excel');
-    });
+});
+
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/login'); // your chosen redirect
+})->name('logout');

@@ -24,3 +24,4 @@ class RoleSeeder extends Seeder
         $this->command->info('✅ Roles and permissions assigned successfully!');
     }
 }
+// php artisan db:seed --class=RoleSeeder

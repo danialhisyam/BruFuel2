@@ -35,7 +35,7 @@
         <label for="name" class="block text-sm font-medium text-gray-200 mb-1">Full Name</label>
         <input id="name" name="name" type="text" value="{{ old('name') }}" required
                class="w-full px-4 py-3 rounded-lg border border-gray-500 bg-[#2b3a5c] text-white placeholder-gray-400 input-focus focus:ring-2 focus:ring-indigo-500"
-               placeholder="John Doe">
+               placeholder="Name">
         @error('name')
           <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
         @enderror
@@ -45,7 +45,7 @@
         <label for="email" class="block text-sm font-medium text-gray-200 mb-1">Email Address</label>
         <input id="email" name="email" type="email" value="{{ old('email') }}" required
                class="w-full px-4 py-3 rounded-lg border border-gray-500 bg-[#2b3a5c] text-white placeholder-gray-400 input-focus focus:ring-2 focus:ring-indigo-500"
-               placeholder="you@brufuel.com">
+               placeholder="Email">
         @error('email')
           <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
         @enderror

@@ -35,7 +35,7 @@ class FortifyServiceProvider extends ServiceProvider
 
         /*
         |--------------------------------------------------------------------------
-        | Rate Limiting (⚙️ required)
+        | Rate Limiting (⚙ required)
         |--------------------------------------------------------------------------
         | Fortify expects a "login" limiter; this defines it safely.
         */
