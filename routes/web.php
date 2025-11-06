@@ -8,11 +8,13 @@ use Illuminate\Http\Request;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\AuthController;
 
+Route::redirect('/dashboard', '/checkout')->name('dashboard');
+
 Route::middleware('auth')->group(function () {
     Route::view('/checkout/fuel', 'logged.checkout.fuel')->name('checkout.fuel')->middleware('auth');
     Route::view('/checkout/vehicledetails', 'logged.checkout.vehicledetails')->name('checkout.vehicledetails')->middleware('auth');
     Route::view('/checkout/location', 'logged.checkout.location')->name('checkout.location')->middleware('auth');
-    Route::view('/checkout/payment', 'logged.checkout.payment')->name('checkout.payment');
+    Route::view('/checkout/payment', 'logged.checkout.payment')->name('checkout.payment')->middleware('auth');
     Route::view('/checkout/confirm', 'logged.checkout.confirm')->name('checkout.confirm');
     Route::view('/checkout/success', 'logged.checkout.success')->name('checkout.success');
 });
@@ -154,6 +156,13 @@ Route::middleware('auth')->prefix('{username}')->group(function () {
         abort_if(strtolower($user->name) !== strtolower($username), 403);
         return view('logged.history', ['user' => $user]);
     })->name('user.history');
+
+        // 🕓 Logged History
+    Route::get('/logged.checkout.fuel', function ($username) {
+        $user = Auth::user();
+        abort_if(strtolower($user->name) !== strtolower($username), 403);
+        return view('logged.checkout.fuel', ['user' => $user]);
+    })->name('user.logged.checkout.fuel');
 });
 
 /*

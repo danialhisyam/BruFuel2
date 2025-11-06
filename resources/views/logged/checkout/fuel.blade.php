@@ -184,14 +184,14 @@
         <div style="position:absolute;top:155px;left:0;width:100%;height:calc(932px - 155px + 150px);background:rgba(217,217,217,0.74);opacity:0.07;border-radius:41px;bottom:-150px;"></div>
 
         <img src="{{ asset('checkout/oil.png') }}" alt="Image 50" draggable="false"
-            style="top:192px; left:27px; width:40px;height:46px;position:absolute;">
+            style="top:192px; left:47px; width:40px;height:46px;position:absolute;">
 
-        <div data-layer="Fuel delivered 24/7, the same price as the petrol station" class="FuelDelivered247TheSamePriceAsThePetrolStation w-64 h-12 left-[80px] top-[189px] absolute justify-center">
+        <div data-layer="Fuel delivered 24/7, the same price as the petrol station" class="FuelDelivered247TheSamePriceAsThePetrolStation w-64 h-12 left-[100px] top-[189px] absolute justify-center">
             <span class="text-white text-base font-semibold font-['Poppins']">Fuel delivered </span>
             <span class="text-yellow-400 text-base font-semibold font-['Poppins']">24/7</span>
             <span class="text-white text-base font-semibold font-['Poppins']">, the same price as the petrol station</span>
         </div>
-        <div data-layer="choose your fuel type" class="ChooseYourFuelType w-36 h-3.5 left-[80px] top-[243px] absolute justify-center text-neutral-400 text-xs font-['Poppins']">choose your fuel type</div>
+        <div data-layer="choose your fuel type" class="ChooseYourFuelType w-36 h-3.5 left-[100px] top-[243px] absolute justify-center text-neutral-400 text-xs font-['Poppins']">choose your fuel type</div>
 
         <!-- Petrol Fuels Section -->
         <div data-layer="Petrol fuels" class="PetrolFuels w-24 h-4 left-[29px] top-[280px] absolute justify-center text-white text-base font-semibold font-['Poppins']">Petrol fuels</div>

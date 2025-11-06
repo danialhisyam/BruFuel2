@@ -27,14 +27,6 @@
             font-family: 'Poppins', sans-serif;
         }
         
-        .fuel-card { 
-            transition: all 0.2s ease; 
-        }
-        
-        .fuel-card:hover { 
-            transform: scale(1.05); 
-        }
-        
         /* Profile dropdown animation */
         #profileMenu.show {
             opacity: 1 !important;
