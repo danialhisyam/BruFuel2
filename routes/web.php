@@ -1,37 +1,86 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Features;
 
-// Livewire settings
+// Livewire settings (class-based components)
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
+
+// Livewire Volt
+use Livewire\Volt\Volt;
+
+// Admin controllers
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\DriverController as AdminDriverController;
+
+// Driver controllers
+use App\Http\Controllers\Driver\AuthController as DriverAuthController;
+use App\Http\Controllers\Driver\TransactionController as DriverTransactionController;
 
 /*
 |--------------------------------------------------------------------------
 | Public
 |--------------------------------------------------------------------------
 | NOTE: If you want a custom landing page instead of redirecting to /login,
-| change the first line to: Route::view('/', 'ComapnySelectection')->name('welcome');
+| change the first line to: Route::view('/', 'CompanySelectection')->name('welcome');
 */
-Route::view('/','/mobile/home')->name('home');
+Route::get('/', function () {
+    return view('loading');              // splash/loading screen
+})->name('loading');
 
-// Fortify custom views MUST be registered before auth routes
+Route::get('/home', function () {
+    return view('mobile.home');          // normal home page
+})->name('home');
+
+/*
+|--------------------------------------------------------------------------
+| Fortify (custom views must be registered before auth routes)
+|--------------------------------------------------------------------------
+*/
 Fortify::loginView(fn () => view('auth.login'));
 if (Features::enabled(Features::registration())) {
     Fortify::registerView(fn () => view('auth.register'));
 }
 
-// Guest-only pages
+/*
+|--------------------------------------------------------------------------
+| Guest-only pages
+|--------------------------------------------------------------------------
+*/
 Route::middleware('guest')->group(function () {
     Route::get('/login', fn () => view('auth.login'))->name('login');
 
     if (Features::enabled(Features::registration())) {
         Route::get('/register', fn () => view('auth.register'))->name('register');
+
+        // Custom Register POST -> create user, assign default role, then send to login
+        Route::post('/register', function (Request $request) {
+            $request->validate([
+                'name'     => 'required|string|max:255',
+                'email'    => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|confirmed|min:8',
+            ]);
+
+            $user = \App\Models\User::create([
+                'name'     => $request->name,
+                'email'    => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            $user->assignRole('customer');
+
+            return redirect('/login')->with('status', 'Account created successfully! Please log in.');
+        })->name('register.post');
     }
 });
 
@@ -49,14 +98,14 @@ Route::get('/redirect-dashboard', function () {
     if ($user->hasRole('admin')) {
         return redirect()->route('admin.dashboard');
     }
+
     if ($user->hasRole('driver')) {
-        return redirect()->route('driver.trips');
-    }
-    if ($user->hasRole('customer')) {
-        return redirect()->route('mobile.home');
+        // You can switch to 'driver.dashboard' if you have a separate dashboard view
+        return redirect()->route('driver.dashboard');
     }
 
-    abort(403, 'No role assigned.');
+    // Default: customers (or any user without explicit role mapping) -> mobile.home
+    return redirect()->route('mobile.home');
 })->middleware('auth')->name('redirect.dashboard');
 
 // Stable alias used by many libs
@@ -73,21 +122,31 @@ Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        Route::view('/dashboard', 'admin.dashboard')->name('dashboard');
+        // Dashboard via controller
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        // Static admin pages that are still Blade-only
         Route::view('/users', 'admin.manage-user')->name('users.index');
         Route::view('/orders', 'admin.manage-order')->name('order.index');
-        Route::view('/drivers', 'admin.manage-drivers')->name('drivers.index');
-        Route::view('/payments', 'admin.payment')->name('payments.index');
+
+        // Users table data endpoint
+        Route::get('/users/data', [UserController::class, 'data'])->name('users.data');
+
+        // Payments (controller + exports)
+        Route::get('/payments',              [PaymentController::class, 'index'])->name('payments');
+        Route::get('/payments/export/csv',   [PaymentController::class, 'exportCsv'])->name('payments.export.csv');
+        Route::get('/payments/export/excel', [PaymentController::class, 'exportExcel'])->name('payments.export.excel');
+
+        // Drivers (full RESTful resource)
+        Route::resource('drivers', AdminDriverController::class);
     });
 
 /*
 |--------------------------------------------------------------------------
 | Driver
-| - Keeps your custom driver login controller/routes under /driver/*
-| - Driver pages themselves require the 'driver' role.
 |--------------------------------------------------------------------------
 */
-// Legacy .html redirects
+/// Legacy .html redirects
 Route::redirect('/driver/trips.html', '/driver/trips', 301);
 Route::redirect('/driver/transactions.html', '/driver/transactions', 301);
 Route::redirect('/driver/index.html', '/driver/dashboard', 301);
@@ -96,8 +155,8 @@ Route::redirect('/driver/login.html', '/driver/login', 301);
 
 // Driver auth pages (public)
 Route::prefix('driver')->name('driver.')->group(function () {
-    Route::get('/login', [App\Http\Controllers\Driver\AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [App\Http\Controllers\Driver\AuthController::class, 'login'])->name('login.submit');
+    Route::get('/login', [DriverAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [DriverAuthController::class, 'login'])->name('login.submit');
 });
 
 // Driver protected pages
@@ -105,10 +164,14 @@ Route::middleware(['auth', 'role:driver'])
     ->prefix('driver')
     ->name('driver.')
     ->group(function () {
-        Route::view('/dashboard', 'driver.transactions.index')->name('dashboard');
+        Route::view('/dashboard', 'driver.dashboard')->name('dashboard');
         Route::view('/trips', 'driver.trips.index')->name('trips');
-        Route::view('/transactions', 'driver.transactions.index')->name('transactions');
+        
+        // Transactions via controller (index + optional download)
+        Route::get('/transactions', [DriverTransactionController::class, 'index'])->name('transactions');
+        Route::get('/transactions/download', [DriverTransactionController::class, 'download'])->name('transactions.download');
     });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -119,13 +182,13 @@ Route::middleware(['auth', 'role:customer'])
     ->prefix('mobile')
     ->name('mobile.')
     ->group(function () {
-        Route::view('/home',     'mobile.home')->name('home');
-        Route::view('/dashboard','mobile.dashboard')->name('dashboard'); // ensure file exists at resources/views/mobile/dashboard.blade.php
-        Route::view('/history',  'mobile.history')->name('history');
-        Route::view('/login',    'mobile.login')->name('login');
-        Route::view('/menu',     'mobile.menu')->name('menu');
-        Route::view('/signup',   'mobile.signup')->name('signup');        // rename from 'sign' -> 'signup'
-        Route::view('/welcome',  'mobile.welcome')->name('welcome');
+        Route::view('/home',       'mobile.home')->name('home');
+        Route::view('/dashboard',  'mobile.dashboard')->name('dashboard');
+        Route::view('/history',    'mobile.history')->name('history');
+        Route::view('/login',      'mobile.login')->name('login');
+        Route::view('/menu',       'mobile.menu')->name('menu');
+        Route::view('/signup',     'mobile.signup')->name('signup');
+        Route::view('/welcome',    'mobile.welcome')->name('welcome');
     });
 
 /*
@@ -136,9 +199,9 @@ Route::middleware(['auth', 'role:customer'])
 Route::middleware('auth')->group(function () {
     Route::redirect('settings', 'settings/profile');
 
-    Route::get('settings/profile', Profile::class)->name('settings.profile');
-    Route::get('settings/password', Password::class)->name('settings.password');
-    Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
+    Route::get('settings/profile',     Profile::class)->name('settings.profile');
+    Route::get('settings/password',    Password::class)->name('settings.password');
+    Route::get('settings/appearance',  Appearance::class)->name('settings.appearance');
 
     // Conditionally require password.confirm for 2FA page
     Route::get('settings/two-factor', TwoFactor::class)
@@ -160,22 +223,25 @@ Route::middleware('auth')->group(function () {
 */
 Route::prefix('testing')->name('testing.')->group(function () {
     Route::view('/testing', 'Testing.Test1')->name('page');
-    Route::view('/admin', 'testing.AdminChat')->name('chat.admin');
-    Route::view('/driver', 'testing.DriverChat')->name('chat.driver');
+    Route::view('/admin',   'testing.AdminChat')->name('chat.admin');
+    Route::view('/driver',  'testing.DriverChat')->name('chat.driver');
 });
 
 /*
 |--------------------------------------------------------------------------
-| For Auth Login
+| Auth extras (logout + forgot password)
 |--------------------------------------------------------------------------
 */
-Route::prefix('auth')->name('auth.')->group(function () {
-    Route::redirect('/login', 'auth.login')->name('login');
-    Route::view('/register', 'auth.register')->name('register');
-    Route::view('/forgot-password', 'auth.forgot-password')->name('forgot-password');
-});
+// Logout (explicit POST endpoint)
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/login');
+})->name('logout');
 
-
+// Forgot Password (Volt) – must NOT be in prefix('auth')
+Volt::route('/forgot-password', 'auth.forgot-password')->name('password.request');
 
 /*
 |--------------------------------------------------------------------------
@@ -189,64 +255,9 @@ Route::get('/force-logout', function () {
     return redirect('/login');
 });
 
-// Legacy driver redirects that point to public login or protected dashboard
-Route::redirect('/driver/login.html', '/driver/login', 301);
-
-use App\Http\Controllers\Admin\PaymentController;
-Route::get('/admin/payments', [PaymentController::class, 'index'])->name('admin.payments');
-
-Route::prefix('admin')->group(function () {
-Route::get('/payments', [PaymentController::class, 'index'])->name('admin.payments');
-    Route::get('/payments/export/csv',   [PaymentController::class, 'exportCsv'])->name('admin.payments.export.csv');
-    Route::get('/payments/export/excel', [PaymentController::class, 'exportExcel'])->name('admin.payments.export.excel');
-    });
-
-    // routes/web.php
-use App\Http\Controllers\Admin\DriverController;
-
-Route::get('/admin/drivers', [DriverController::class,'index'])->name('admin.drivers.index');
-Route::get('/admin/drivers/{driver}', [DriverController::class,'show'])->name('admin.drivers.show');
-Route::put('/admin/drivers/{driver}', [DriverController::class,'update'])->name('admin.drivers.update');
-Route::delete('/admin/drivers/{driver}', [DriverController::class,'destroy'])->name('admin.drivers.destroy');
-
-// routes/web.php
-
-Route::prefix('admin')->name('admin.')->group(function () {
-  Route::get('/drivers', [\App\Http\Controllers\Admin\DriverController::class,'index'])->name('drivers.index');
-  Route::get('/drivers/{driver}', [\App\Http\Controllers\Admin\DriverController::class,'show'])->name('drivers.show');
-  Route::post('/drivers', [\App\Http\Controllers\Admin\DriverController::class,'store'])->name('drivers.store');
-  Route::put('/drivers/{driver}', [\App\Http\Controllers\Admin\DriverController::class,'update'])->name('drivers.update');
-  Route::delete('/drivers/{driver}', [\App\Http\Controllers\Admin\DriverController::class,'destroy'])->name('drivers.destroy');
+Route::get('/debug-auth', function () {
+    return [
+        'authenticated' => Auth::check(),
+        'user' => Auth::user(),
+    ];
 });
-
-Route::middleware(['auth','role:admin'])
-    ->prefix('admin')->name('admin.')
-    ->group(function () {
-        // keep the page route
-        Route::get('/users', [UserController::class, 'index'])->name('users.index');
-
-        // NEW: data route for your table
-        Route::get('/users/data', [UserController::class, 'data'])->name('users.data');
-    });
-
-    // routes/web.php
-// routes/web.php
-use App\Http\Controllers\Admin\DashboardController;
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/dashboard', [DashboardController::class, 'index'])
-        ->name('admin.dashboard');
-});
-
-// routes/web.php
-Route::prefix('admin')->name('admin.')->group(function () {
-  Route::get('/drivers/{driver}',  [DriverController::class, 'show'])->name('drivers.show');
-  Route::put('/drivers/{driver}',  [DriverController::class, 'update'])->name('drivers.update');
-});
-
-// routes/web.php
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    Route::resource('drivers', App\Http\Controllers\Admin\DriverController::class);
-});
-
-
