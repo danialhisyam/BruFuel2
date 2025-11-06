@@ -12,6 +12,7 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
+use App\Http\Controllers\Driver\TransactionController;
 
 // Livewire Forgot Password
 use Livewire\Volt\Volt;
@@ -23,7 +24,14 @@ use Livewire\Volt\Volt;
 | NOTE: If you want a custom landing page instead of redirecting to /login,
 | change the first line to: Route::view('/', 'CompanySelectection')->name('welcome');
 */
-Route::view('/', '/mobile/home')->name('home');
+Route::get('/', function () {
+    return view('loading');
+})->name('loading');
+
+// Step 2: After loading → go to /home
+Route::get('/home', function () {
+    return view('mobile.home'); // your normal home page
+})->name('home');
 
 // Fortify custom views MUST be registered before auth routes
 Fortify::loginView(fn () => view('auth.login'));
@@ -76,7 +84,7 @@ Route::get('/redirect-dashboard', function () {
     }
 
     if ($user->hasRole('driver')) {
-        return redirect()->route('driver.trips');
+        return redirect()->route('driver.dashboard');
     }
 
     // ✅ Default redirect for customers or users without a role
@@ -118,8 +126,10 @@ Route::redirect('/driver/login.html', '/driver/login', 301);
 
 // Driver auth pages (public)
 Route::prefix('driver')->name('driver.')->group(function () {
+    Route::get('/transactions', [TransactionController::class, 'index'])->name('driver.transactions.index');
     Route::get('/login', [App\Http\Controllers\Driver\AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [App\Http\Controllers\Driver\AuthController::class, 'login'])->name('login.submit');
+    Route::post('/logout', [App\Http\Controllers\Driver\AuthController::class, 'logout'])->name('logout');
 });
 
 // Driver protected pages
@@ -127,10 +137,21 @@ Route::middleware(['auth', 'role:driver'])
     ->prefix('driver')
     ->name('driver.')
     ->group(function () {
-        Route::view('/dashboard', 'driver.transactions.index')->name('dashboard');
+        Route::view('/dashboard', 'driver.dashboard')->name('dashboard');
         Route::view('/trips', 'driver.trips.index')->name('trips');
-        Route::view('/transactions', 'driver.transactions.index')->name('transactions');
+        Route::get('/transactions', [App\Http\Controllers\TransactionController::class, 'index'])
+            ->name('transactions.index');
     });
+
+
+Route::middleware(['auth', 'role:driver'])
+    ->prefix('driver')
+    ->name('driver.')
+    ->group(function () {
+        Route::get('/transactions', [TransactionController::class, 'index'])
+            ->name('transactions.index');
+    });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -227,3 +248,18 @@ Route::post('/logout', function () {
     request()->session()->regenerateToken();
     return redirect('/login'); // your chosen redirect
 })->name('logout');
+
+Route::get('/debug-auth', function () {
+    return [
+        'authenticated' => Auth::check(),
+        'user' => Auth::user(),
+    ];
+
+Route::prefix('driver')->middleware(['auth', 'role:driver'])->name('driver.')->group(function () {
+    Route::get('/transactions', [App\Http\Controllers\TransactionController::class, 'index'])
+        ->name('transactions.index');
+});
+Route::get('/driver/transactions/download', [App\Http\Controllers\TransactionController::class, 'download'])
+    ->name('driver.transactions.download');
+
+});
