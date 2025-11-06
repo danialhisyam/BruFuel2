@@ -228,3 +228,13 @@ Route::middleware(['auth','role:admin'])
         // NEW: data route for your table
         Route::get('/users/data', [UserController::class, 'data'])->name('users.data');
     });
+
+    // routes/web.php
+// routes/web.php
+use App\Http\Controllers\Admin\DashboardController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])
+        ->name('admin.dashboard');
+});
+
