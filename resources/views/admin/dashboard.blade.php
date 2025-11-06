@@ -63,30 +63,30 @@
           </li>
         </ul>
       </nav>
-
-      <!-- Footer -->
-      <div class="mt-auto p-4">
-        <div class="flex items-center gap-3 rounded-xl border border-slate-800 bg-[#0b1220] p-3">
-          <div class="grid h-9 w-9 place-items-center rounded-full bg-white/10">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z"/><path d="M12 14c-5 0-9 2.5-9 5v1h18v-1c0-2.5-4-5-9-5z"/>
-            </svg>
-          </div>
-          <div class="text-sm">
-            <p class="font-medium">Admin User</p>
-            <p class="text-slate-400">Administrator</p>
-          </div>
-          @auth
-          <form method="POST" action="{{ route('logout') }}" class="inline ml-auto">
-            @csrf
-            <button type="submit" class="px-3 py-2 rounded-lg bg-red-600/90 hover:bg-red-600 text-white text-sm font-medium">
-              Log out
-            </button>
-          </form>
-          @endauth
-        </div>
+        
+       <!-- FOOTER (profile + logout below it) -->
+  <div class="px-5 pb-5">
+    <!-- Profile -->
+    <div class="flex items-center gap-3 rounded-xl border border-slate-800 p-3 bg-[#101826]">
+     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z"/><path d="M12 14c-5 0-9 2.5-9 5v1h18v-1c0-2.5-4-5-9-5z"/></svg>
+      <div>
+        <p class="text-sm font-medium text-slate-100">Admin User</p>
+        <p class="text-xs text-slate-400">Administrator</p>
       </div>
-    </aside>
+    </div>
+
+    <!-- Logout BELOW profile -->
+    @auth
+      <form method="POST" action="{{ route('logout') }}" class="mt-3">
+        @csrf
+        <button type="submit"
+          class="w-full px-4 py-2 rounded-lg bg-red-600/90 hover:bg-red-600 text-white text-sm font-medium transition">
+          Log out
+        </button>
+      </form>
+    @endauth
+  </div>
+</aside>
 
     <!-- MAIN -->
     <main class="flex-1">
@@ -97,7 +97,6 @@
             <span class="text-xl font-bold">BruFuel</span>
             <span class="text-xs font-semibold text-slate-900 bg-amber-400/90 px-2 py-0.5 rounded">ADMIN</span>
           </div>
-          <img class="h-8 w-8 rounded-full" src="http://static.photos/workspace/200x200/5" alt="Admin avatar" />
         </div>
       </header>
 
@@ -168,40 +167,35 @@
     </div>
   </a>
 
-  <!-- Payment Received (link to Payments page) -->
-  <a href="/admin/payments"
-     class="rounded-2xl bg-[#141c2b] border border-slate-700 p-6 hover:border-purple-500 transition hover:-translate-y-1 duration-200 block">
+  <!-- Payment Received -->
+<a href="/admin/payments">
+  <div class="rounded-2xl bg-[#141c2b] border border-slate-700 p-6 hover:border-purple-500 transition hover:-translate-y-1 duration-200">
     <div class="flex items-start justify-between">
       <p class="text-sm text-slate-400">Payment Received</p>
       <div class="grid h-9 w-9 place-items-center rounded-lg bg-purple-500/15">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-300" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 1a11 11 0 1 0 11 11A11.012 11.012 0 0 0 12 1zm1 17h-2v-2h2a2 2 0 0 0 0-4h-2a4 4 0 0 1 0 8z"/>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9c0 3.93 2.54 7.25 6.03 8.49l.97-2.47A7 7 0 1 1 19 12h2a9 9 0 1 0-9 9z" />
         </svg>
       </div>
     </div>
-    <p class="mt-3 text-3xl font-semibold">${{ number_format($paymentToday ?? 0, 2) }}</p>
-    <p class="mt-1 text-xs text-slate-400">All-time: ${{ number_format($paymentTotal ?? 0, 2) }}</p>
-    <div class="mt-4 space-y-1.5 text-sm">
-      @foreach(($paymentByMethod ?? []) as $prov => $todayAmt)
-        @php $allAmt = (float) ($paymentAllTimeByMethod[$prov] ?? 0); @endphp
-        <div class="flex justify-between text-slate-300">
-          <span>{{ $prov }}</span>
-          <span>Today: ${{ number_format($todayAmt, 2) }} • All-time: ${{ number_format($allAmt, 2) }}</span>
+
+    <!-- Total Revenue -->
+    <p class="mt-3 text-3xl font-semibold">${{ number_format($totalRevenue ?? 0, 2) }}</p>
+
+    <!-- Breakdown by Method -->
+    <div class="mt-4 space-y-1.5 text-sm text-slate-300">
+      @foreach ($paymentByMethod as $method => $amount)
+        <div class="flex justify-between">
+          <span>{{ $method }}</span>
+          <span>${{ number_format($amount, 2) }}</span>
         </div>
       @endforeach
     </div>
-  </a>
-
-</div>
+  </div>
+</a>
 
 
 <!-- Put once near end of <body> -->
-<script src="https://unpkg.com/feather-icons"></script>
-<script>feather.replace();</script>
-
-
-     
-    <!-- Put once near end of <body> -->
 <script src="https://unpkg.com/feather-icons"></script>
 <script>feather.replace();</script>
 

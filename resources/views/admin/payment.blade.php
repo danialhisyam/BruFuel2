@@ -39,18 +39,29 @@
       </ul>
     </nav>
 
-    <div class="mt-auto p-4">
-      <div class="flex items-center gap-3 rounded-xl border border-slate-800 bg-[#0b1220] p-3">
-        <div class="grid h-9 w-9 place-items-center rounded-full bg-white/10">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z"/><path d="M12 14c-5 0-9 2.5-9 5v1h18v-1c0-2.5-4-5-9-5z"/></svg>
-        </div>
-        <div class="text-sm">
-          <p class="font-medium">Admin User</p>
-          <p class="text-slate-400">Administrator</p>
-        </div>
+   <!-- FOOTER (profile + logout below it) -->
+  <div class="px-5 pb-5">
+    <!-- Profile -->
+    <div class="flex items-center gap-3 rounded-xl border border-slate-800 p-3 bg-[#101826]">
+     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z"/><path d="M12 14c-5 0-9 2.5-9 5v1h18v-1c0-2.5-4-5-9-5z"/></svg>
+      <div>
+        <p class="text-sm font-medium text-slate-100">Admin User</p>
+        <p class="text-xs text-slate-400">Administrator</p>
       </div>
     </div>
-  </aside>
+
+    <!-- Logout BELOW profile -->
+    @auth
+      <form method="POST" action="{{ route('logout') }}" class="mt-3">
+        @csrf
+        <button type="submit"
+          class="w-full px-4 py-2 rounded-lg bg-red-600/90 hover:bg-red-600 text-white text-sm font-medium transition">
+          Log out
+        </button>
+      </form>
+    @endauth
+  </div>
+</aside>
 
   {{-- Main --}}
   <main class="flex-1">
@@ -60,7 +71,6 @@
           <span class="text-xl font-bold">BruFuel</span>
           <span class="text-xs font-semibold text-slate-900 bg-amber-400/90 px-2 py-0.5 rounded">ADMIN</span>
         </div>
-        <img class="h-8 w-8 rounded-full" src="http://static.photos/workspace/200x200/5" alt="Admin avatar" />
       </div>
     </header>
 

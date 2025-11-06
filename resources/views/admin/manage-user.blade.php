@@ -45,32 +45,43 @@
         <li><a class="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-300 hover:bg-white/5" href="/admin/payments"><span class="inline-block h-1.5 w-1.5 rounded-full bg-slate-500"></span>Payments</a></li>
       </ul>
     </nav>
-    <div class="mt-auto p-4">
-      <div class="flex items-center gap-3 rounded-xl border border-slate-800 bg-[#0b1220] p-3">
-        <div class="grid h-9 w-9 place-items-center rounded-full bg-white/10">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z"/><path d="M12 14c-5 0-9 2.5-9 5v1h18v-1c0-2.5-4-5-9-5z"/></svg>
-        </div>
-        <div class="text-sm">
-          <p class="font-medium">Admin User</p>
-          <p class="text-slate-400" x-data x-text="$root.__x?.$data?.contextRole ?? 'Admin'"></p>
-        </div>
+   
+    
+    <!-- FOOTER (profile + logout below it) -->
+  <div class="px-5 pb-5">
+    <!-- Profile -->
+    <div class="flex items-center gap-3 rounded-xl border border-slate-800 p-3 bg-[#101826]">
+     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z"/><path d="M12 14c-5 0-9 2.5-9 5v1h18v-1c0-2.5-4-5-9-5z"/></svg>
+      <div>
+        <p class="text-sm font-medium text-slate-100">Admin User</p>
+        <p class="text-xs text-slate-400">Administrator</p>
       </div>
     </div>
-  </aside>
 
-  <!-- MAIN -->
-  <main class="flex-1">
-    <!-- Top bar -->
-    <header class="border-b border-slate-800">
-      <div class="w-full px-5 py-4 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <span class="text-xl font-bold">BruFuel</span>
-          <span class="text-xs font-semibold text-slate-900 bg-amber-400/90 px-2 py-0.5 rounded"
-                x-data x-text="$root.__x?.$data?.contextRole?.toUpperCase?.() ?? 'ADMIN'"></span>
+    <!-- Logout BELOW profile -->
+    @auth
+      <form method="POST" action="{{ route('logout') }}" class="mt-3">
+        @csrf
+        <button type="submit"
+          class="w-full px-4 py-2 rounded-lg bg-red-600/90 hover:bg-red-600 text-white text-sm font-medium transition">
+          Log out
+        </button>
+      </form>
+    @endauth
+  </div>
+</aside>
+
+    <!-- MAIN -->
+    <main class="flex-1">
+      <!-- Top bar -->
+      <header class="border-b border-slate-800">
+        <div class="w-full px-5 py-4 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-xl font-bold">BruFuel</span>
+            <span class="text-xs font-semibold text-slate-900 bg-amber-400/90 px-2 py-0.5 rounded">ADMIN</span>
+          </div>
         </div>
-        <img class="h-8 w-8 rounded-full" src="http://static.photos/workspace/200x200/5" alt="avatar" />
-      </div>
-    </header>
+      </header>
 
     <!-- Users module -->
     <section class="mx-auto max-w-7xl px-6 py-8" x-data="usersPage()" x-init="init()">

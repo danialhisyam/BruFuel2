@@ -40,54 +40,35 @@ class DashboardController extends Controller
             $recent       = collect();
         }
 
-        /** ---------- PAYMENTS (today + all-time) ---------- */
-        $dateCol   = Schema::hasColumn('payments', 'paid_at') ? 'paid_at' : 'created_at';
-        $providers = ['TAP', 'CASH', 'BIBD', 'BAIDURI']; // always show these
+       /** ---------- SIMPLE PAYMENTS SUMMARY ---------- */
+$providers = ['TAP', 'CASH', 'BIBD', 'BAIDURI'];
 
-        // Today total
-        $paymentToday = (float) Payment::whereDate($dateCol, $today)
-            ->whereIn('status', ['Paid', 'paid'])
-            ->sum('amount');
+// Total revenue (sum of all paid transactions)
+$totalRevenue = (float) Payment::whereIn('status', ['Paid', 'paid'])->sum('amount');
 
-        // All-time total
-        $paymentTotal = (float) Payment::whereIn('status', ['Paid', 'paid'])->sum('amount');
+// Revenue by payment method
+$paymentByMethod = Payment::select('provider', DB::raw('SUM(amount) as total'))
+    ->whereIn('status', ['Paid', 'paid'])
+    ->groupBy('provider')
+    ->pluck('total', 'provider')
+    ->toArray();
 
-        // Today by provider (raw)
-        $rawToday = Payment::select('provider', DB::raw('SUM(amount) as total'))
-            ->whereDate($dateCol, $today)
-            ->whereIn('status', ['Paid', 'paid'])
-            ->groupBy('provider')
-            ->pluck('total', 'provider')
-            ->toArray();
+// Make sure all 4 providers always show up even if 0
+$paymentByMethod = collect($providers)->mapWithKeys(fn ($p) => [
+    $p => (float) ($paymentByMethod[$p] ?? 0),
+]);
 
-        // Normalize to include all providers
-        $paymentByMethod = collect($providers)->mapWithKeys(fn ($p) => [
-            $p => (float) ($rawToday[$p] ?? 0),
-        ]);
-
-        // All-time by provider (raw)
-        $rawAllTime = Payment::select('provider', DB::raw('SUM(amount) as total'))
-            ->whereIn('status', ['Paid', 'paid'])
-            ->groupBy('provider')
-            ->pluck('total', 'provider')
-            ->toArray();
-
-        // Normalize all-time
-        $paymentAllTimeByMethod = collect($providers)->mapWithKeys(fn ($p) => [
-            $p => (float) ($rawAllTime[$p] ?? 0),
-        ]);
 
         /** ---------- VIEW ---------- */
-        return view('admin.dashboard', [
-            'totalUsers'               => $totalUsers,
-            'activeDrivers'            => $activeDrivers,
-            'activePct'                => $activePct,
-            'todaysOrders'             => $todaysOrders,
-            'paymentToday'             => $paymentToday,
-            'paymentTotal'             => $paymentTotal,
-            'paymentByMethod'          => $paymentByMethod,
-            'paymentAllTimeByMethod'   => $paymentAllTimeByMethod,
-            'recent'                   => $recent,
-        ]);
+       return view('admin.dashboard', [
+    'totalUsers'      => $totalUsers,
+    'activeDrivers'   => $activeDrivers,
+    'activePct'       => $activePct,
+    'todaysOrders'    => $todaysOrders,
+    'recent'          => $recent,
+    'totalRevenue'    => $totalRevenue,
+    'paymentByMethod' => $paymentByMethod,
+]);
+
     }
 }

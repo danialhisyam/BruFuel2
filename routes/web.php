@@ -238,3 +238,15 @@ Route::middleware(['auth'])->group(function () {
         ->name('admin.dashboard');
 });
 
+// routes/web.php
+Route::prefix('admin')->name('admin.')->group(function () {
+  Route::get('/drivers/{driver}',  [DriverController::class, 'show'])->name('drivers.show');
+  Route::put('/drivers/{driver}',  [DriverController::class, 'update'])->name('drivers.update');
+});
+
+// routes/web.php
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    Route::resource('drivers', App\Http\Controllers\Admin\DriverController::class);
+});
+
+
