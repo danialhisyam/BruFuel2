@@ -695,7 +695,6 @@ class ComposerStaticInit6650ae30ddca58d3c5761d1f99933bf4
         'App\\Models\\Payment' => __DIR__ . '/../..' . '/app/Models/Payment.php',
         'App\\Models\\PaymentAdmin' => __DIR__ . '/../..' . '/app/Models/PaymentAdmin.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
-        'App\\Models\\transaction' => __DIR__ . '/../..' . '/app/Models/transaction.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
         'App\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/app/Providers/EventServiceProvider.php',

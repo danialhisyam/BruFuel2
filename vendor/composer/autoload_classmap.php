@@ -38,7 +38,6 @@ return array(
     'App\\Models\\Payment' => $baseDir . '/app/Models/Payment.php',
     'App\\Models\\PaymentAdmin' => $baseDir . '/app/Models/PaymentAdmin.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
-    'App\\Models\\transaction' => $baseDir . '/app/Models/transaction.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
     'App\\Providers\\AuthServiceProvider' => $baseDir . '/app/Providers/AuthServiceProvider.php',
     'App\\Providers\\EventServiceProvider' => $baseDir . '/app/Providers/EventServiceProvider.php',
