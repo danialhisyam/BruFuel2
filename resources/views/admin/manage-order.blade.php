@@ -3,32 +3,35 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>BruFuel • Dashboard</title>
+  <title>BruFuel • Admin</title>
 
-  <!-- Tailwind (one time only) -->
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Polyline arrows -->
+  <script src="https://unpkg.com/leaflet-polylinedecorator@1.7.0/dist/leaflet.polylineDecorator.min.js"></script>
+
   <style>
     :root { color-scheme: dark; }
-    body     { background:#0b1220; }           /* page bg (dark blue/black) */
-    .sidebar { background:#0f1625; }           /* sidebar bg */
-    .card    { background:#141c2b; border-color:#1f2937; } /* card/border */
-
-    .order-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0,0,0,.1); }
-    .map-container { height: 400px; background-image:url('http://static.photos/indoor/640x360/42'); background-size:cover; background-position:center; }
-    @keyframes pulse { 0%{ box-shadow:0 0 0 0 rgba(59,130,246,.4);} 70%{ box-shadow:0 0 0 10px rgba(59,130,246,0);} 100%{ box-shadow:0 0 0 0 rgba(59,130,246,0);} }
-    .pulse-animation { animation:pulse 2s infinite; }
+    body { background:#0b1220; }
+    .sidebar { background:#0f1625; }
+    .card { background:#141c2b; border-color:#1f2937; }
+    .leaflet-container { background:#0b1220; }
   </style>
 </head>
-<body class="min-h-screen text-slate-100 antialiased">
 
+<body class="min-h-screen text-slate-100 antialiased">
   <div class="flex min-h-screen">
-   
-    <!-- SIDEBAR -->
+    
+  <!-- SIDEBAR -->
     <aside class="sidebar w-64 shrink-0 border-r border-slate-800 flex flex-col">
-      <!-- Brand -->
       <div class="flex items-center gap-3 px-5 py-5">
         <div class="grid h-12 w-12 place-items-center rounded-xl bg-white/10">
-          <img src="/AdminPics/whiteshell.png" class="h-11 w-12" alt="Shell Icon">
+          <img src="/AdminPics/whiteshell.png" class="h-11 w-12 object-cover" alt="Shell Icon">
         </div>
         <div>
           <p class="text-lg font-semibold">BruFuel</p>
@@ -41,348 +44,309 @@
         <ul class="space-y-1">
           <li>
             <a class="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-300 hover:bg-white/5" href="/admin/dashboard">
-              
-            <span class="inline-block h-1.5 w-1.5 rounded-full bg-slate-500"></span>
+             <span class="inline-block h-1.5 w-1.5 rounded-full bg-slate-500"></span>
               Dashboard
             </a>
           </li>
-
           <li>
-            <a class="flex items-center gap-3 rounded-lg px-3 py-2 bg-indigo-500/15 text-white" href="/admin/orders">
+            <a class="flex items-center gap-3 rounded-lg px-3 py-2 bg-indigo-500/15 text-white"  href="/admin/orders">
               <span class="inline-block h-1.5 w-1.5 rounded-full bg-indigo-400"></span>
               Orders
             </a>
           </li>
-
           <li>
             <a class="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-300 hover:bg-white/5" href="/admin/users">
               <span class="inline-block h-1.5 w-1.5 rounded-full bg-slate-500"></span>
               Users
             </a>
           </li>
-
           <li>
             <a class="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-300 hover:bg-white/5" href="/admin/drivers">
               <span class="inline-block h-1.5 w-1.5 rounded-full bg-slate-500"></span>
               Drivers
             </a>
           </li>
-
           <li>
             <a class="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-300 hover:bg-white/5" href="/admin/payments">
               <span class="inline-block h-1.5 w-1.5 rounded-full bg-slate-500"></span>
-              payments
+              Payments
             </a>
           </li>
         </ul>
-      </nav>
-
-      <!-- Push footer card to bottom -->
-      <div class="mt-auto p-4">
-        <div class="flex items-center gap-3 rounded-xl border border-slate-800 bg-[#0b1220] p-3">
-          <div class="grid h-9 w-9 place-items-center rounded-full bg-white/10">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z"/><path d="M12 14c-5 0-9 2.5-9 5v1h18v-1c0-2.5-4-5-9-5z"/>
-            </svg>
-          </div>
-          <div class="text-sm">
-            <p class="font-medium">Admin User</p>
-            <p class="text-slate-400">Administrator</p>
-          </div>
-        </div>
+        </nav>
+       
+      <!-- FOOTER (profile + logout below it) -->
+  <div class="px-5 pb-5">
+    <!-- Profile -->
+    <div class="flex items-center gap-3 rounded-xl border border-slate-800 p-3 bg-[#101826]">
+     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z"/><path d="M12 14c-5 0-9 2.5-9 5v1h18v-1c0-2.5-4-5-9-5z"/></svg>
+      <div>
+        <p class="text-sm font-medium text-slate-100">Admin User</p>
+        <p class="text-xs text-slate-400">Administrator</p>
       </div>
-    </aside>
+    </div>
 
-     <!-- MAIN -->
+    <!-- Logout BELOW profile -->
+    @auth
+      <form method="POST" action="{{ route('logout') }}" class="mt-3">
+        @csrf
+        <button type="submit"
+          class="w-full px-4 py-2 rounded-lg bg-red-600/90 hover:bg-red-600 text-white text-sm font-medium transition">
+          Log out
+        </button>
+      </form>
+    @endauth
+  </div>
+</aside>
+
+    <!-- MAIN -->
     <main class="flex-1">
-     
-    <!-- Top bar -->
       <header class="border-b border-slate-800">
-        <div class="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
+        <div class="w-full px-5 py-4 flex items-center justify-between">
           <div class="flex items-center gap-2">
             <span class="text-xl font-bold">BruFuel</span>
             <span class="text-xs font-semibold text-slate-900 bg-amber-400/90 px-2 py-0.5 rounded">ADMIN</span>
           </div>
-          <div class="flex items-center gap-3">
-             
-            <!-- bell -->
-              </button>
-            <img class="h-8 w-8 rounded-full" src="http://static.photos/workspace/200x200/5" alt="Admin">
-          </div>
         </div>
       </header>
 
-      <!-- CONTENT WRAPPER -->
-      <div class="max-w-7xl mx-auto px-4 lg:px-6 py-6">
-        <!-- Grid: left takes 2/3, right takes 1/3 -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- LEFT COLUMN -->
-          <section class="lg:col-span-2 space-y-6 min-w-0">
-            <!-- Current Ride -->
-            <div class="bg-white/5 card rounded-lg shadow overflow-hidden">
-              <div class="p-4 border-b border-gray-700">
-                <h2 class="text-lg font-semibold text-white">Current Ride</h2>
-              </div>
-              <div class="p-4">
-                <div class="flex items-start gap-4">
-                  <div class="relative">
-                    <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
-                      <i data-feather="user" class="w-5 h-5 text-blue-400"></i>
-                    </div>
-                    <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-[#141c2b]"></div>
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <div class="flex justify-between">
-                      <h3 class="font-medium text-white truncate">Sarah Johnson</h3>
-                      <span class="text-sm bg-green-900/40 text-green-300 px-2 py-1 rounded-full">In Progress</span>
-                    </div>
-                    <div class="mt-2 space-y-2">
-                      <div class="flex items-start gap-2">
-                        <div class="mt-1 w-4 h-4 rounded-full bg-blue-500 flex-shrink-0"></div>
-                        <p class="text-sm text-slate-300">123 Main St, Downtown</p>
-                      </div>
-                      <div class="flex items-start gap-2">
-                        <div class="mt-1 w-4 h-4 rounded-full bg-purple-500 flex-shrink-0"></div>
-                        <p class="text-sm text-slate-300">456 Park Ave, Uptown</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="mt-4 pt-4 border-t border-gray-700 flex justify-between items-center">
-                  <div>
-                    <p class="text-sm text-slate-400">Estimated Fare</p>
-                    <p class="text-lg font-semibold text-white">$18.75</p>
-                  </div>
-                  <div class="flex gap-2">
-                    <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition">
-                      <i data-feather="phone" class="w-4 h-4"></i>
-                      <span>Call</span>
-                    </button>
-                    <button class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg flex items-center gap-2 transition">
-                      <i data-feather="message-square" class="w-4 h-4"></i>
-                      <span>Message</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
+      <div class="p-6">
+        <header class="flex items-center justify-between mb-5">
+          <div class="flex items-center gap-3">
+            <h1 class="text-xl font-semibold">Driver Monitoring</h1>
+            <span class="text-sm px-3 py-1 rounded bg-amber-400/20 text-amber-200 border border-amber-400/30 font-medium">Live</span>
+          </div>
+        </header>
+
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <div class="lg:col-span-12 card rounded-2xl border shadow-soft">
+            <div class="flex items-center justify-between p-4 border-b border-slate-700/60">
+              <div class="font-medium">Live Map</div>
+              <div class="text-xs text-slate-400">Bandar Seri Begawan</div>
             </div>
+            <div id="map" class="h-[560px] rounded-b-2xl"></div>
+          </div>
+        </section>
 
-            <!-- Available Orders -->
-            <div class="bg-white/5 card rounded-lg shadow overflow-hidden">
-              <div class="p-4 border-b border-gray-700 flex justify-between items-center">
-                <h2 class="text-lg font-semibold text-white">Available Orders</h2>
-                <button class="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1">
-                  <i data-feather="refresh-cw" class="w-4 h-4"></i><span>Refresh</span>
-                </button>
-              </div>
-
-              <div class="divide-y divide-gray-700">
-                <!-- Order 1 -->
-                <div class="p-4 hover:bg-white/5 transition order-card cursor-pointer">
-                  <div class="flex items-start gap-4">
-                    <div class="relative">
-                      <div class="w-12 h-12 rounded-full bg-gray-700 grid place-items-center">
-                        <i data-feather="user" class="w-5 h-5 text-gray-400"></i>
-                      </div>
-                      <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-[#141c2b]"></div>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex justify-between">
-                        <h3 class="font-medium text-white truncate">Michael Brown</h3>
-                        <span class="text-xs bg-yellow-900/40 text-yellow-300 px-2 py-1 rounded-full">5 min away</span>
-                      </div>
-                      <div class="mt-2 space-y-2">
-                        <div class="flex items-start gap-2">
-                          <div class="mt-1 w-4 h-4 rounded-full bg-blue-500 flex-shrink-0"></div>
-                          <p class="text-sm text-slate-300">789 Elm St, Midtown</p>
-                        </div>
-                        <div class="flex items-start gap-2">
-                          <div class="mt-1 w-4 h-4 rounded-full bg-purple-500 flex-shrink-0"></div>
-                          <p class="text-sm text-slate-300">101 Oak Ave, Suburb</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="mt-4 flex justify-between items-center">
-                    <div>
-                      <p class="text-sm text-slate-400">Estimated Fare</p>
-                      <p class="text-lg font-semibold text-white">$22.50</p>
-                    </div>
-                    <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition">
-                      <i data-feather="check" class="w-4 h-4"></i><span>Accept</span>
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Order 2 -->
-                <div class="p-4 hover:bg-white/5 transition order-card cursor-pointer">
-                  <div class="flex items-start gap-4">
-                    <div class="relative">
-                      <div class="w-12 h-12 rounded-full bg-gray-700 grid place-items-center">
-                        <i data-feather="user" class="w-5 h-5 text-gray-400"></i>
-                      </div>
-                      <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-gray-400 rounded-full border-2 border-[#141c2b]"></div>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex justify-between">
-                        <h3 class="font-medium text-white truncate">Emily Wilson</h3>
-                        <span class="text-xs bg-yellow-900/40 text-yellow-300 px-2 py-1 rounded-full">8 min away</span>
-                      </div>
-                      <div class="mt-2 space-y-2">
-                        <div class="flex items-start gap-2">
-                          <div class="mt-1 w-4 h-4 rounded-full bg-blue-500 flex-shrink-0"></div>
-                          <p class="text-sm text-slate-300">202 Pine St, Downtown</p>
-                        </div>
-                        <div class="flex items-start gap-2">
-                          <div class="mt-1 w-4 h-4 rounded-full bg-purple-500 flex-shrink-0"></div>
-                          <p class="text-sm text-slate-300">303 Maple Dr, Uptown</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="mt-4 flex justify-between items-center">
-                    <div>
-                      <p class="text-sm text-slate-400">Estimated Fare</p>
-                      <p class="text-lg font-semibold text-white">$15.25</p>
-                    </div>
-                    <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition">
-                      <i data-feather="check" class="w-4 h-4"></i><span>Accept</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- RIGHT COLUMN -->
-          <aside class="space-y-6 min-w-0">
-            <!-- Map -->
-            <div class="card rounded-lg shadow overflow-hidden">
-              <div class="p-4 border-b border-gray-700">
-                <h2 class="text-lg font-semibold text-white">Live Location</h2>
-              </div>
-              <div class="map-container relative">
-                <div class="absolute top-4 right-4 z-10">
-                  <button class="p-2 bg-[#141c2b] rounded-full shadow">
-                    <i data-feather="maximize" class="w-4 h-4 text-slate-300"></i>
-                  </button>
-                </div>
-                <div class="absolute bottom-4 left-4 z-10">
-                  <div class="rounded-full shadow p-3 pulse-animation bg-[#141c2b]">
-                    <i data-feather="navigation" class="w-5 h-5 text-blue-400"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Driver Status -->
-            <div class="card rounded-lg shadow overflow-hidden">
-              <div class="p-4 border-b border-gray-700">
-                <h2 class="text-lg font-semibold text-white">Driver Status</h2>
-              </div>
-              <div class="p-4 space-y-4">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-3">
-                    <div class="p-2 rounded-full bg-green-900/40">
-                      <i data-feather="check-circle" class="w-5 h-5 text-green-400"></i>
-                    </div>
-                    <div>
-                      <p class="text-sm font-medium text-slate-300">Online Status</p>
-                      <p class="text-xs text-slate-400">You're currently online</p>
-                    </div>
-                  </div>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" checked class="sr-only peer">
-                    <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
-                  </label>
-                </div>
-
-                <div class="flex items-center gap-3">
-                  <div class="p-2 rounded-full bg-blue-900/40">
-                    <i data-feather="car" class="w-5 h-5 text-blue-400"></i>
-                  </div>
-                  <div>
-                    <p class="text-sm font-medium text-slate-300">Vehicle Info</p>
-                    <p class="text-xs text-slate-400">Toyota Camry • ABC-1234</p>
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-3">
-                  <div class="p-2 rounded-full bg-purple-900/40">
-                    <i data-feather="clock" class="w-5 h-5 text-purple-400"></i>
-                  </div>
-                  <div>
-                    <p class="text-sm font-medium text-slate-300">Shift Duration</p>
-                    <p class="text-xs text-slate-400">4 hours 22 minutes</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="card rounded-lg shadow overflow-hidden">
-              <div class="p-4 border-b border-gray-700">
-                <h2 class="text-lg font-semibold text-white">Quick Actions</h2>
-              </div>
-              <div class="p-4 grid grid-cols-2 gap-3">
-                <button class="p-3 bg-gray-800 hover:bg-gray-700 rounded-lg flex flex-col items-center transition">
-                  <div class="p-2 rounded-full bg-red-900/40 mb-2">
-                    <i data-feather="alert-octagon" class="w-5 h-5 text-red-400"></i>
-                  </div>
-                  <span class="text-sm font-medium text-slate-300">Emergency</span>
-                </button>
-                <button class="p-3 bg-gray-800 hover:bg-gray-700 rounded-lg flex flex-col items-center transition">
-                  <div class="p-2 rounded-full bg-yellow-900/40 mb-2">
-                    <i data-feather="coffee" class="w-5 h-5 text-yellow-400"></i>
-                  </div>
-                  <span class="text-sm font-medium text-slate-300">Break</span>
-                </button>
-                <button class="p-3 bg-gray-800 hover:bg-gray-700 rounded-lg flex flex-col items-center transition">
-                  <div class="p-2 rounded-full bg-green-900/40 mb-2">
-                    <i data-feather="home" class="w-5 h-5 text-green-400"></i>
-                  </div>
-                  <span class="text-sm font-medium text-slate-300">Go Offline</span>
-                </button>
-                <button class="p-3 bg-gray-800 hover:bg-gray-700 rounded-lg flex flex-col items-center transition">
-                  <div class="p-2 rounded-full bg-blue-900/40 mb-2">
-                    <i data-feather="settings" class="w-5 h-5 text-blue-400"></i>
-                  </div>
-                  <span class="text-sm font-medium text-slate-300">Settings</span>
-                </button>
-              </div>
-            </div>
-          </aside>
-        </div>
+        <section class="mt-6 card rounded-2xl border shadow-soft overflow-hidden">
+          <div class="p-4 border-b border-slate-700/60 flex items-center justify-between">
+            <div class="font-medium">Drivers</div>
+            <div class="text-xs text-slate-400" id="driverCount"></div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-sm">
+              <thead class="bg-slate-900/50 text-slate-300">
+                <tr>
+                  <th class="text-left px-4 py-3">Driver</th>
+                  <th class="text-left px-4 py-3">Vehicle</th>
+                  <th class="text-left px-4 py-3">Status</th>
+                  <th class="text-left px-4 py-3">Last Ping</th>
+                  <th class="text-left px-4 py-3">Current Job</th>
+                  <th class="text-left px-4 py-3">ETA</th>
+                  <th class="text-left px-4 py-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="driverTableBody" class="divide-y divide-slate-800/70"></tbody>
+            </table>
+          </div>
+        </section>
       </div>
-
-      <!-- Mobile bottom nav -->
-      <nav class="fixed bottom-0 left-0 right-0 bg-[#141c2b] border-t border-slate-800 shadow-lg lg:hidden">
-        <div class="flex justify-around items-center h-16">
-          <a href="#" class="flex flex-col items-center p-2 text-blue-400"><i data-feather="home" class="w-5 h-5"></i><span class="text-xs mt-1">Home</span></a>
-          <a href="#" class="flex flex-col items-center p-2 text-slate-400"><i data-feather="map" class="w-5 h-5"></i><span class="text-xs mt-1">Map</span></a>
-          <a href="#" class="flex flex-col items-center p-2 text-slate-400"><i data-feather="list" class="w-5 h-5"></i><span class="text-xs mt-1">Orders</span></a>
-          <a href="#" class="flex flex-col items-center p-2 text-slate-400"><i data-feather="user" class="w-5 h-5"></i><span class="text-xs mt-1">Profile</span></a>
-        </div>
-      </nav>
     </main>
   </div>
 
-  <!-- Feather (load once) -->
-  <script src="https://unpkg.com/feather-icons"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      feather.replace();
+  <!-- FLOATING PANEL (draggable) -->
+<div id="drawer" class="fixed top-16 left-16 hidden z-[1000]">
+  <div id="drawerCard" class="card rounded-2xl border shadow-soft w-[420px] bg-[#141c2b]">
+    <div id="drawerHeader"
+         class="p-4 border-b border-slate-700/60 flex items-center justify-between cursor-move select-none">
+      <div class="font-medium">Driver Detail</div>
+      <button id="drawerClose" class="text-slate-400 hover:text-slate-200">✕</button>
+    </div>
+    <div id="drawerBody" class="p-4 text-sm"></div>
+  </div>
+</div>
 
-      const html = document.documentElement;
-      const themeToggle = document.getElementById('themeToggle');
-      themeToggle?.addEventListener('click', () => {
-        html.classList.toggle('dark');
-        themeToggle.innerHTML = html.classList.contains('dark')
-          ? '<i data-feather="sun" class="w-5 h-5 text-yellow-300"></i>'
-          : '<i data-feather="moon" class="w-5 h-5 text-yellow-300"></i>';
-        feather.replace();
-      });
-    });
+
+
+  <script>
+// ---------------- Draggable Drawer ----------------
+(function(){
+  const drawer = document.getElementById('drawer');
+  const header = document.getElementById('drawerHeader');
+  let dragging = false, startX = 0, startY = 0, startLeft = 0, startTop = 0;
+
+  // Ensure the drawer has explicit pixel positions (not Tailwind classes) once shown
+  function ensurePixelPosition(){
+    const style = getComputedStyle(drawer);
+    if (style.left.endsWith('%') || style.top.endsWith('%')) {
+      drawer.style.left = drawer.offsetLeft + 'px';
+      drawer.style.top  = drawer.offsetTop  + 'px';
+    }
+  }
+
+  header.addEventListener('mousedown', (e) => {
+    dragging = true;
+    ensurePixelPosition();
+    startX = e.clientX;
+    startY = e.clientY;
+    // parseInt strips 'px'
+    startLeft = parseInt(getComputedStyle(drawer).left, 10) || 0;
+    startTop  = parseInt(getComputedStyle(drawer).top, 10)  || 0;
+
+    // Improve drag feel
+    document.body.classList.add('select-none');
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    // Keep inside viewport
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const rect = drawer.getBoundingClientRect();
+    let nextLeft = startLeft + dx;
+    let nextTop  = startTop  + dy;
+
+    const margin = 8;
+    nextLeft = Math.min(Math.max(nextLeft, margin), vw - rect.width - margin);
+    nextTop  = Math.min(Math.max(nextTop,  margin), vh - rect.height - margin);
+
+    drawer.style.left = nextLeft + 'px';
+    drawer.style.top  = nextTop  + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    document.body.classList.remove('select-none');
+  });
+
+  // Touch support
+  header.addEventListener('touchstart', (e) => {
+    const t = e.touches[0];
+    dragging = true;
+    ensurePixelPosition();
+    startX = t.clientX; startY = t.clientY;
+    startLeft = parseInt(getComputedStyle(drawer).left, 10) || 0;
+    startTop  = parseInt(getComputedStyle(drawer).top, 10)  || 0;
+  }, {passive:true});
+
+  document.addEventListener('touchmove', (e) => {
+    if (!dragging) return;
+    const t = e.touches[0];
+    const dx = t.clientX - startX;
+    const dy = t.clientY - startY;
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const rect = drawer.getBoundingClientRect();
+    let nextLeft = startLeft + dx;
+    let nextTop  = startTop  + dy;
+
+    const margin = 8;
+    nextLeft = Math.min(Math.max(nextLeft, margin), vw - rect.width - margin);
+    nextTop  = Math.min(Math.max(nextTop,  margin), vh - rect.height - margin);
+
+    drawer.style.left = `${nextLeft}px`;
+    drawer.style.top  = `${nextTop}px`;
+  }, {passive:true});
+
+  document.addEventListener('touchend', () => { dragging = false; });
+
+  // Bring to front when opened
+  window.bringDrawerToFront = () => {
+    const base = 1000;
+    const next = (window.__zCounter = (window.__zCounter || base) + 1);
+    drawer.style.zIndex = String(next);
+  };
+})();
+
+    const drivers = [
+      { id:'DEF-9876', name:'Mary', phone:'+6737201634', vehicle:'Honda City', status:'ondelivery', lastPingMin:2, coords:[4.8906,114.9275], job:{ code:'ORD-1203', etaMin:6, dropoff:[4.9295,114.9179] }},
+      { id:'ABC-1234', name:'John', phone:'+6738822000', vehicle:'Toyota Vios', status:'ondelivery', lastPingMin:1, coords:[4.9036,114.9399], job:{ code:'ORD-1204', etaMin:9, dropoff:[4.9454,114.9578] }},
+      { id:'XYZ-5522', name:'Aisyah', phone:'+673881122', vehicle:'Perodua Bezza', status:'ondelivery', lastPingMin:5, coords:[4.9059,114.9332], job:{ code:'ORD-1205', etaMin:12, dropoff:[4.8931,114.9032] }},
+      { id:'JKL-7744', name:'Hafiz', phone:'+673881199', vehicle:'Proton Saga', status:'offline', lastPingMin:40, coords:[4.8679,114.8297], job:null }
+    ];
+
+    const STATUS = {
+      ondelivery:{ label:'On Delivery', chip:'text-blue-300 bg-blue-500/10 border-blue-500/20' },
+      offline:{ label:'Offline', chip:'text-slate-300 bg-slate-600/10 border-slate-500/20' }
+    };
+
+    const ROUTE_COLOR = { 'DEF-9876':'#3b82f6', 'ABC-1234':'#06b6d4', 'XYZ-5522':'#8b5cf6' };
+    const OSRM_PROVIDERS = [
+      'https://router.project-osrm.org',
+      'https://routing.openstreetmap.de/routed-car',
+      'https://osrm.demo.project-osrm.org'
+    ];
+
+    let map; let markers = {}; let routeLayers = {};
+
+    function callDriver(phone){ const formatted = phone.replace(/\D/g,''); window.location.href = `tel:${formatted}`; }
+    function msgDriver(name, phone){ window.location.href = "/testing/admin"; }
+
+    function fitToDrivers(list = drivers){ if (!list.length) return; const b = L.latLngBounds(list.map(d => d.coords)); map.fitBounds(b.pad(0.2)); }
+
+    async function fetchRouteGeoJSON(startLatLng, endLatLng){
+      const [sLat, sLng] = startLatLng, [eLat, eLng] = endLatLng;
+      const qs = 'overview=full&geometries=geojson';
+      for (const base of OSRM_PROVIDERS){
+        try{
+          const res = await fetch(`${base}/route/v1/driving/${sLng},${sLat};${eLng},${eLat}?${qs}`);
+          if(!res.ok) continue;
+          const json = await res.json();
+          if(json.code === 'Ok' && json.routes[0]) return json.routes[0].geometry.coordinates.map(([lng,lat]) => [lat,lng]);
+        }catch{}
+      }
+      return null;
+    }
+
+    async function buildRoute(d){
+      if(!d || !d.job || !d.job.dropoff) return;
+      const color = ROUTE_COLOR[d.id] || '#3b82f6';
+      const group = L.layerGroup().addTo(map);
+      routeLayers[d.id] = { group };
+
+      const dest = L.marker(d.job.dropoff,{icon:L.divIcon({html:`<div style="background:${color};width:16px;height:16px;border-radius:9999px;box-shadow:0 0 0 4px rgba(0,0,0,.35)"></div>`})}).addTo(group);
+      routeLayers[d.id].destMarker = dest;
+
+      const coords = await fetchRouteGeoJSON(d.coords, d.job.dropoff);
+      if(coords){
+        const poly = L.polyline(coords,{color,weight:7,opacity:0.9,className:'cursor-pointer'}).addTo(group);
+        const deco = L.polylineDecorator(poly,{patterns:[{offset:25,repeat:60,symbol:L.Symbol.arrowHead({pixelSize:10,pathOptions:{color,opacity:0.95}})}]}).addTo(group);
+        routeLayers[d.id].polyline = poly; routeLayers[d.id].deco = deco;
+        poly.on('click',()=>{openDrawer(d); map.fitBounds(poly.getBounds(),{padding:[24,24]});});
+      }
+    }
+
+    function toggleRoute(d){ if(routeLayers[d.id]){ clearRoute(d.id); renderTable(drivers); } else { buildRoute(d); renderTable(drivers); } }
+    function clearRoute(id){ const rl=routeLayers[id]; if(!rl)return; Object.values(rl).forEach(l=>l.remove&&l.remove()); delete routeLayers[id]; }
+
+    function renderMarkers(list){ Object.values(markers).forEach(m=>map.removeLayer(m)); markers={}; list.forEach(d=>{ const m=L.marker(d.coords).addTo(map).bindTooltip(`${d.name} • ${STATUS[d.status].label}`); m.on('click',()=>openDrawer(d)); markers[d.id]=m; }); }
+    function renderTable(list){
+      document.getElementById('driverCount').textContent=`${list.length} drivers`;
+      document.getElementById('driverTableBody').innerHTML=list.map(d=>{
+        const eta=d.job?.etaMin?d.job.etaMin+" min":"-";
+        const routeBtn=d.status==='ondelivery'?`<button onclick="toggleRoute(drivers.find(x=>x.id==='${d.id}'))" class="ml-2 px-2.5 py-1.5 text-xs rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30">${routeLayers[d.id]?'Hide Route':'Show Route'}</button>`:'';
+        return `<tr class="hover:bg-slate-900/30"><td class="px-4 py-3">${d.name}</td><td class="px-4 py-3">${d.vehicle}</td><td class="px-4 py-3"><span class="text-[10px] px-2 py-0.5 rounded border ${STATUS[d.status].chip}">${STATUS[d.status].label}</span></td><td class="px-4 py-3">${d.lastPingMin} min ago</td><td class="px-4 py-3">${d.job?d.job.code:'-'}</td><td class="px-4 py-3">${eta}</td><td class="px-4 py-3"><button onclick="callDriver('${d.phone}')" class="px-2.5 py-1.5 text-xs rounded-lg bg-slate-800 border border-slate-700">Call</button><button onclick="msgDriver('${d.name}','${d.phone}')" class="ml-2 px-2.5 py-1.5 text-xs rounded-lg bg-blue-600">Message</button>${routeBtn}</td></tr>`;
+      }).join('');
+    }
+
+    function openDrawer(d){
+      const body=document.getElementById('drawerBody');
+      const routeBtn=d.status==='ondelivery'?`<button onclick="toggleRoute(drivers.find(x=>x.id==='${d.id}'))" class="px-3 py-2 text-sm rounded-lg bg-amber-500/20 text-amber-300 border">${routeLayers[d.id]?'Hide Route':'Show Route'}</button>`:'';
+      body.innerHTML=`<div class="font-medium text-base">${d.name}</div><div class="text-xs text-slate-400">${d.vehicle} • ID ${d.id}</div><div class="mt-3">Status: ${STATUS[d.status].label}</div><div class="mt-2">Last Ping: ${d.lastPingMin} min ago</div><div class="mt-2">Job: ${d.job?d.job.code:'-'}</div><div class="mt-4 flex gap-2"><button onclick="callDriver('${d.phone}')" class="px-3 py-2 text-sm rounded-lg bg-slate-800 border">Call Driver</button><button onclick="msgDriver('${d.name}','${d.phone}')" class="px-3 py-2 text-sm rounded-lg bg-blue-600">Message Driver</button>${routeBtn}</div>`;
+      document.getElementById('drawer').classList.remove('hidden');
+    }
+
+    document.getElementById('drawerClose').addEventListener('click',()=>{document.getElementById('drawer').classList.add('hidden');});
+
+    function initMap(){ map=L.map('map').setView([4.905,114.940],12); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map); renderMarkers(drivers); renderTable(drivers); fitToDrivers(); }
+    window.addEventListener('load',initMap);
+
+    setInterval(()=>{drivers.forEach(d=>{if(d.status!=='offline')d.lastPingMin++;});renderTable(drivers);},6000);
   </script>
 </body>
 </html>

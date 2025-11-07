@@ -17,7 +17,7 @@ class AuthController extends Controller
             session()->regenerateToken();
         }
 
-        return view('driver.auth.login');
+        return view('auth.login');
     }
 
     public function login(Request $request)
