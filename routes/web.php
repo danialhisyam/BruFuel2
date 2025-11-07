@@ -22,7 +22,10 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\DriverController as AdminDriverController;
+<<<<<<< HEAD
 use App\Http\Controllers\Admin\OrderController;   // make sure this file exists
+=======
+>>>>>>> origin/master
 
 // Driver controllers
 use App\Http\Controllers\Driver\AuthController as DriverAuthController;
@@ -140,6 +143,7 @@ Route::middleware(['auth', 'role:admin'])
 
         // Drivers (full RESTful resource)
         Route::resource('drivers', AdminDriverController::class);
+<<<<<<< HEAD
 
         // Stats (JSON) – handy if you want AJAX/Alpine later
     Route::get('/stats/users',   [UserController::class, 'count'])->name('stats.users');
@@ -154,6 +158,10 @@ Route::middleware(['auth', 'role:admin'])
 
 
     
+=======
+    });
+
+>>>>>>> origin/master
 /*
 |--------------------------------------------------------------------------
 | Driver

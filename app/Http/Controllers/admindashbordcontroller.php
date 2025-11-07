@@ -57,4 +57,7 @@ class DashboardController extends Controller
         return response()->json(['ok'=>true]);
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master

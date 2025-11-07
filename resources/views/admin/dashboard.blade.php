@@ -110,6 +110,7 @@
         <!-- KPI CARDS (single grid, no nested grids) -->
 <div class="grid grid-cols-1 lg:grid-cols-4 gap-5 mt-2">
 
+<<<<<<< HEAD
  {{-- Users --}}
 <div class="card p-5 rounded-xl">
   <div class="text-sm text-slate-400">Total Users</div>
@@ -140,6 +141,64 @@
     <span class="text-slate-400">vs yesterday</span>
   </div>
 </div>
+=======
+  <!-- Total Users (link to Users page) -->
+  <a href="/admin/users"
+     class="rounded-2xl bg-[#141c2b] border border-slate-700 p-6 hover:border-blue-500 transition hover:-translate-y-1 duration-200 block">
+    <div class="flex items-center justify-between">
+      <h3 class="text-slate-400 text-sm font-medium">Total Users</h3>
+      <div class="p-2 bg-blue-500/10 rounded-lg">
+        <i data-feather="users" class="w-5 h-5 text-blue-400"></i>
+      </div>
+    </div>
+    <div class="mt-3 text-4xl font-semibold text-white">31</div>
+    <div class="mt-2 flex items-center justify-between text-sm text-slate-400">
+      <span>+4 new this week</span>
+      <span class="text-green-400 font-medium">↑ 15%</span>
+    </div>
+    <div class="mt-3 h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+      <div class="h-full bg-gradient-to-r from-blue-400 to-blue-600" style="width:60%"></div>
+    </div>
+  </a>
+
+  <!-- Active Drivers (link to Drivers page) -->
+  <a href="/admin/drivers"
+     class="rounded-2xl bg-[#141c2b] border border-slate-700 p-6 hover:border-teal-500 transition hover:-translate-y-1 duration-200 block">
+    <div class="flex items-center justify-between">
+      <h3 class="text-slate-400 text-sm font-medium">Active Drivers</h3>
+      <div class="p-2 bg-teal-500/10 rounded-lg">
+        <i data-feather="truck" class="w-5 h-5 text-teal-400"></i>
+      </div>
+    </div>
+    <div class="mt-3 text-4xl font-semibold text-white">6</div>
+    <div class="mt-2 flex items-center justify-between text-sm text-slate-400">
+      <span>60% available</span>
+      <span class="text-green-400 font-medium shrink-0">● Online</span>
+    </div>
+    <div class="mt-3 h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+      <div class="h-full bg-gradient-to-r from-teal-400 to-green-400" style="width:60%"></div>
+    </div>
+  </a>
+
+  <!-- Today's Orders (link to Orders page) -->
+  <a href="/admin/dashboard"
+     class="rounded-2xl bg-[#141c2b] border border-slate-700 p-6 hover:border-yellow-500 transition hover:-translate-y-1 duration-200 block">
+    <div class="flex items-center justify-between">
+      <h3 class="text-slate-400 text-sm font-medium">Today's Orders</h3>
+      <div class="p-2 bg-yellow-500/10 rounded-lg">
+        <i data-feather="package" class="w-5 h-5 text-yellow-400"></i>
+      </div>
+    </div>
+    <div class="mt-3 text-4xl font-semibold text-white">60</div>
+    <div class="mt-2 flex items-center justify-between text-sm text-slate-400">
+      <span>+12 from yesterday</span>
+      <span class="text-yellow-400 font-medium">▲ 25%</span>
+    </div>
+    <div class="mt-3 h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+      <div class="h-full bg-gradient-to-r from-yellow-400 to-amber-500" style="width:80%"></div>
+    </div>
+  </a>
+>>>>>>> origin/master
 
   <!-- Payment Received -->
 <a href="/admin/payments">

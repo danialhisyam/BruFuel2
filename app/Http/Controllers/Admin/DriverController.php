@@ -73,6 +73,7 @@ class DriverController extends Controller
         $driver->delete();
         return response()->json(['success' => true]);
     }
+<<<<<<< HEAD
 
     /**
      * Return count of drivers for stats endpoint
@@ -83,3 +84,6 @@ class DriverController extends Controller
         return response()->json(['count' => $total]);
     }
 }
+=======
+}
+>>>>>>> origin/master
