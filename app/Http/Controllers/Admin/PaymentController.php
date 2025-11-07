@@ -29,13 +29,26 @@ class PaymentController extends Controller
         $providers = Payment::select('provider')->distinct()->orderBy('provider')->pluck('provider');
 
         // Monthly chart (filtered + Paid only)
-        $chart = (clone $kpiBase)
-            ->where('status', 'Paid')
-            ->whereNotNull('paid_at')
-            ->selectRaw("MONTH(paid_at) as m_idx, DATE_FORMAT(paid_at, '%b') as m_name, SUM(amount) as total")
-            ->groupBy('m_idx', 'm_name')
-            ->orderBy('m_idx')
-            ->get();
+        $dbDriver = \DB::connection()->getDriverName();
+        
+        if ($dbDriver === 'sqlite') {
+            $chart = (clone $kpiBase)
+                ->where('status', 'Paid')
+                ->whereNotNull('paid_at')
+                ->selectRaw("CAST(strftime('%m', paid_at) AS INTEGER) as m_idx, strftime('%b', paid_at) as m_name, SUM(amount) as total")
+                ->groupBy('m_idx', 'm_name')
+                ->orderBy('m_idx')
+                ->get();
+        } else {
+            // MySQL/MariaDB
+            $chart = (clone $kpiBase)
+                ->where('status', 'Paid')
+                ->whereNotNull('paid_at')
+                ->selectRaw("MONTH(paid_at) as m_idx, DATE_FORMAT(paid_at, '%b') as m_name, SUM(amount) as total")
+                ->groupBy('m_idx', 'm_name')
+                ->orderBy('m_idx')
+                ->get();
+        }
 
         $chartLabels = $chart->pluck('m_name');
         $chartData   = $chart->pluck('total');
