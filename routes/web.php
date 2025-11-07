@@ -200,10 +200,6 @@ Route::group([
             Route::post('/vehicledetails', [App\Http\Controllers\CheckoutController::class, 'vehicleStore'])
            ->name('user.checkout.vehicledetails.store');
 
-
-
-
-
             Route::get('/fuel', fn() => view('logged.checkout.fuel'))->name('user.checkout.fuel');
             Route::get('/vehicledetails', fn() => view('logged.checkout.vehicledetails'))->name('user.checkout.vehicledetails');
             Route::get('/location', fn() => view('logged.checkout.location'))->name('user.checkout.location');
