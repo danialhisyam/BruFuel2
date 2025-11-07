@@ -33,6 +33,7 @@
 
     @php
         use Illuminate\Support\Facades\Auth;
+        $selectedFuel = session('checkout.fuel.fuel_type') ?? null;
         $user = Auth::user();
     @endphp
 
@@ -242,7 +243,16 @@
             CONFIRM FUEL
         </span>
         </div>
-</div>
+
+        <form id="fuelForm"
+        method="POST"
+        action="{{ route('user.checkout.fuel.store', ['username' => strtolower(Auth::user()->name)]) }}"
+        style="display:none;">
+        @csrf
+        <input type="hidden" name="fuel_type" id="fuel_type_input">
+        <input type="hidden" name="redirect_back" value="{{ request()->query('redirect_back') }}">
+        </form>
+        </div>
         <script>
         let selectedFuel = null;
 
@@ -269,9 +279,16 @@
             confirmText.style.opacity = '1';
             confirmText.textContent = 'CONFIRM ' + label.toUpperCase();
 
-            confirmBtn.onclick = () => {
-                window.location.href = "{{ route('checkout.location') }}";
-            };
+           confirmBtn.onclick = () => {
+    if (!selectedFuel) return;
+
+    // Store selected label in the hidden input
+    document.getElementById('fuel_type_input').value = label;
+console.log("Submitting fuel type:", document.getElementById('fuel_type_input').value);
+    // Submit the hidden form to save the fuel choice in session
+    document.getElementById('fuelForm').submit();
+};
+
 
             };
         </script>
@@ -294,6 +311,25 @@
             transform: translateY(0);
         }
         </style>
+
+        <script>
+        // Auto-highlight previously selected fuel from session
+        window.addEventListener('load', () => {
+            const previousFuel = @json($selectedFuel);
+            if (previousFuel) {
+                const fuelMap = {
+                    "V-Power RON97": "vpower97",
+                    "Premium RON97": "premium97",
+                    "Regular RON85": "regular85",
+                    "V-Power Diesel": "vpowerdiesel",
+                    "Diesel": "diesel",
+                };
+                const id = fuelMap[previousFuel];
+                if (id) selectFuel(id, previousFuel);
+            }
+        });
+    </script>
+
 
         <script>
         window.addEventListener('load', () => {

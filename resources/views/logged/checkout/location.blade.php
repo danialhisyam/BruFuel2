@@ -299,8 +299,16 @@
                 confirmBtn.style.cursor = "pointer";
                 confirmText.style.opacity = "1";
                 confirmBtn.onclick = () => {
-                    window.location.href = "{{ route('checkout.vehicledetails') }}";
-                };
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirectBack = urlParams.get("redirect_back");
+
+                if (redirectBack === "payment") {
+                    window.location.href = "{{ route('user.checkout.payment', ['username' => strtolower(Auth::user()->name)]) }}";
+                } else {
+                    window.location.href = "{{ route('user.checkout.vehicledetails', ['username' => strtolower(Auth::user()->name)]) }}";
+                }
+            };
+
                 } else {
                 confirmBtn.style.background = "#4B5563"; // grey
                 confirmBtn.style.cursor = "not-allowed";
@@ -337,6 +345,14 @@
 
                 // ✅ Trigger the confirm button update manually
                 if (typeof updateConfirmButton === 'function') updateConfirmButton();
+                fetch("{{ route('user.checkout.location.save', ['username' => strtolower(Auth::user()->name)]) }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                },
+                body: JSON.stringify({ address: addressBox.value })
+            });
             });
         });
     </script>

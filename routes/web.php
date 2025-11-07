@@ -8,16 +8,12 @@ use Illuminate\Http\Request;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\AuthController;
 
-Route::redirect('/dashboard', '/checkout')->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::view('/checkout/fuel', 'logged.checkout.fuel')->name('checkout.fuel')->middleware('auth');
-    Route::view('/checkout/vehicledetails', 'logged.checkout.vehicledetails')->name('checkout.vehicledetails')->middleware('auth');
-    Route::view('/checkout/location', 'logged.checkout.location')->name('checkout.location')->middleware('auth');
-    Route::view('/checkout/payment', 'logged.checkout.payment')->name('checkout.payment')->middleware('auth');
-    Route::view('/checkout/confirm', 'logged.checkout.confirm')->name('checkout.confirm');
-    Route::view('/checkout/success', 'logged.checkout.success')->name('checkout.success');
-});
+/*
+|--------------------------------------------------------------------------
+| DASHBOARD REDIRECT
+|--------------------------------------------------------------------------
+*/
+Route::redirect('/dashboard', '/home')->name('dashboard');
 
 /*
 |--------------------------------------------------------------------------
@@ -129,41 +125,95 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| USER-SPECIFIC DASHBOARD (/username/home, /username/menu, /username/history)
+| USER-SPECIFIC ROUTES (USERNAME PREFIX)
+|--------------------------------------------------------------------------
+|
+| Every logged-in route (home, menu, history, checkout pages) 
+| will include the username in the URL.
+| Example:
+|   /hisyam/home
+|   /hisyam/menu
+|   /hisyam/checkout/fuel
 |--------------------------------------------------------------------------
 */
-Route::pattern('username', '^(?!signup|login|logout|home|menu|history|admin\.dashboard|driver\.dashboard|settings).*');
 
-Route::middleware('auth')->prefix('{username}')->group(function () {
+Route::pattern('username', '^(?!signup|login|logout|home|menu|history|admin|driver|settings).*');
 
-    // 🏠 Logged Home
-    Route::get('/home', function ($username) {
-        $user = Auth::user();
-        abort_if(strtolower($user->name) !== strtolower($username), 403);
-        return view('logged.home', ['user' => $user]);
-    })->name('user.home');
+Route::group([
+    'prefix' => '{username}',
+    'middleware' => ['auth'],
+], function () {
 
-    // 🍔 Logged Menu
-    Route::get('/menu', function ($username) {
-        $user = Auth::user();
-        abort_if(strtolower($user->name) !== strtolower($username), 403);
-        return view('logged.menu', ['user' => $user]);
-    })->name('user.menu');
+    // ✅ Inline access-control middleware using Route::group callback
+    Route::group([], function () {
+        // Everything below runs only if user is logged in AND matches username
+        Route::get('/home', function ($username, Request $request) {
+            $user = Auth::user();
 
-    // 🕓 Logged History
-    Route::get('/history', function ($username) {
-        $user = Auth::user();
-        abort_if(strtolower($user->name) !== strtolower($username), 403);
-        return view('logged.history', ['user' => $user]);
-    })->name('user.history');
+            // Not logged in or mismatch → logout and redirect
+            if (!$user || strtolower($user->name) !== strtolower($username)) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return redirect()->route('login');
+            }
 
-        // 🕓 Logged History
-    Route::get('/logged.checkout.fuel', function ($username) {
-        $user = Auth::user();
-        abort_if(strtolower($user->name) !== strtolower($username), 403);
-        return view('logged.checkout.fuel', ['user' => $user]);
-    })->name('user.logged.checkout.fuel');
+            return view('logged.home', ['user' => $user]);
+        })->name('user.home');
+
+        Route::get('/menu', function ($username, Request $request) {
+            $user = Auth::user();
+            if (!$user || strtolower($user->name) !== strtolower($username)) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return redirect()->route('login');
+            }
+
+            return view('logged.menu', ['user' => $user]);
+        })->name('user.menu');
+
+        Route::get('/history', function ($username, Request $request) {
+            $user = Auth::user();
+            if (!$user || strtolower($user->name) !== strtolower($username)) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return redirect()->route('login');
+            }
+
+            return view('logged.history', ['user' => $user]);
+        })->name('user.history');
+
+        // ✅ Checkout pages (same protection applied)
+        Route::prefix('checkout')->group(function () {
+
+            Route::get('/reset', [\App\Http\Controllers\CheckoutController::class, 'reset'])
+            ->name('user.checkout.reset');
+
+        
+            Route::post('/fuel', [\App\Http\Controllers\CheckoutController::class, 'fuelStore'])
+            ->name('user.checkout.fuel.store');
+            Route::post('/location/save', [\App\Http\Controllers\CheckoutController::class, 'locationStore'])
+            ->name('user.checkout.location.save');
+            // ✅ Save vehicle details (license plate + brand/model)
+            Route::post('/vehicledetails', [App\Http\Controllers\CheckoutController::class, 'vehicleStore'])
+           ->name('user.checkout.vehicledetails.store');
+
+
+
+
+
+            Route::get('/fuel', fn() => view('logged.checkout.fuel'))->name('user.checkout.fuel');
+            Route::get('/vehicledetails', fn() => view('logged.checkout.vehicledetails'))->name('user.checkout.vehicledetails');
+            Route::get('/location', fn() => view('logged.checkout.location'))->name('user.checkout.location');
+            Route::get('/payment', fn() => view('logged.checkout.payment'))->name('user.checkout.payment');
+            Route::get('/confirm', fn() => view('logged.checkout.confirm'))->name('user.checkout.confirm');
+            Route::get('/success', fn() => view('logged.checkout.success'))->name('user.checkout.success');
+        });
+    });
 });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -197,7 +247,11 @@ Route::get('/debug-auth', function () {
     ];
 });
 
-// 🚫 Prevent browser caching after logout
+/*
+|--------------------------------------------------------------------------
+| DISABLE CACHE AFTER LOGOUT
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth')->group(function () {
     \Illuminate\Support\Facades\Response::macro('nocache', function ($content) {
         return response($content)

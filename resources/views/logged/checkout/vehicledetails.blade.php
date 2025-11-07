@@ -230,114 +230,124 @@
                 </div>
             </div>
 
-            <!-- ✅ License Plate Number -->
-            <div style="position:absolute;left:41px;top:305px;width:348px;height:61px;border-radius:14px;">
-                <div style="width:348px;height:37px;top:24px;position:absolute;
-                            background:rgba(217,217,217,0.06);border-radius:14px;"></div>
-                <div style="position:absolute;top:0;left:9px;color:white;font-size:13px;font-weight:500;">
-                    License Plate Number
-                </div>
-                <input type="text" 
-                       placeholder="e.g. BAA 1234"
-                       style="position:absolute;top:27px;left:14px;width:320px;height:30px;
-                            background:transparent;border:none;outline:none;
-                            color:rgba(177,177,177,0.3); /* always grey by default */
-                            font-size:11px;font-weight:500;font-family:Poppins;
-                            caret-color:white;"
-                       oninput="this.style.color = this.value ? 'white' : 'rgba(177,177,177,0.3)'">
-            </div>
+<!-- ✅ License Plate Number -->
+<div style="position:absolute;left:41px;top:305px;width:348px;height:61px;border-radius:14px;">
+    <div style="width:348px;height:37px;top:24px;position:absolute;
+                background:rgba(217,217,217,0.06);border-radius:14px;"></div>
+    <div style="position:absolute;top:0;left:9px;color:white;font-size:13px;font-weight:500;">
+        License Plate Number
+    </div>
+    <input 
+        type="text"
+        id="licensePlate"
+        name="license_plate"
+        value="{{ session('checkout.vehicle.license_plate') ?? '' }}"
+        placeholder="e.g. BAA 1234"
+        style="position:absolute;top:27px;left:14px;width:320px;height:30px;
+            background:transparent;border:none;outline:none;
+            color:{{ session('checkout.vehicle.license_plate') ? 'white' : 'rgba(177,177,177,0.3)' }};
+            font-size:11px;font-weight:500;font-family:Poppins;
+            caret-color:white;"
+        oninput="this.style.color = this.value ? 'white' : 'rgba(177,177,177,0.3)'"
+    />
+</div>
 
-            <!-- ✅ Vehicle Type -->
-            <div style="position:absolute;left:41px;top:380px;width:348px;height:61px;">
-                <div style="width:348px;height:37px;top:24px;position:absolute;
-                            background:rgba(217,217,217,0.06);
-                            border-radius:14px;"></div>
-                <div style="position:absolute;top:0;left:9px;
-                            color:white;font-size:13px;font-weight:500;">
-                    Vehicle Type
-                </div>
+<!-- ✅ Vehicle Type -->
+<div style="position:absolute;left:41px;top:380px;width:348px;height:61px;">
+    <div style="width:348px;height:37px;top:24px;position:absolute;
+                background:rgba(217,217,217,0.06);
+                border-radius:14px;"></div>
+    <div style="position:absolute;top:0;left:9px;
+                color:white;font-size:13px;font-weight:500;">
+        Vehicle Type
+    </div>
 
-                <select id="vehicleType"
-                        style="position:absolute;top:24px;left:0;width:348px;height:37px;
-                            background:rgba(50, 59, 83, 0.04);
-                            border:none;outline:none;
-                            border-radius:14px;
-                            padding:0 14px;
-                            color:rgba(177, 177, 177, 0.15);
-                            font-size:11px;font-weight:500;
-                            font-family:Poppins;
-                            transition:all 0.25s ease;
-                            cursor:pointer;"
-                        onblur="this.style.boxShadow='none'">
-                    <option value="" disabled selected hidden>e.g. Car</option>
-                    <option value="Car">Car</option>
-                    <option value="Motorcycle">Motorcycle</option>
-                    <option value="Van">Van</option>
-                    <option value="Truck">Truck</option>
-                </select>
-            </div>
+    <select id="vehicleType"
+        style="position:absolute;top:24px;left:0;width:348px;height:37px;
+            background:rgba(50, 59, 83, 0.04);
+            border:none;outline:none;
+            border-radius:14px;
+            padding:0 14px;
+            color:{{ session('checkout.vehicle.vehicle_type') ? 'white' : 'rgba(177,177,177,0.15)' }};
+            font-size:11px;font-weight:500;
+            font-family:Poppins;
+            transition:all 0.25s ease;
+            cursor:pointer;"
+        onblur="this.style.boxShadow='none'">
+        <option value="" disabled {{ !session('checkout.vehicle.vehicle_type') ? 'selected' : '' }}>e.g. Car</option>
+        <option value="Car" {{ session('checkout.vehicle.vehicle_type') === 'Car' ? 'selected' : '' }}>Car</option>
+        <option value="Motorcycle" {{ session('checkout.vehicle.vehicle_type') === 'Motorcycle' ? 'selected' : '' }}>Motorcycle</option>
+        <option value="Van" {{ session('checkout.vehicle.vehicle_type') === 'Van' ? 'selected' : '' }}>Van</option>
+        <option value="Truck" {{ session('checkout.vehicle.vehicle_type') === 'Truck' ? 'selected' : '' }}>Truck</option>
+    </select>
+</div>
 
-            <!-- ✅ Vehicle Make and Model -->
-            <div style="position:absolute;left:41px;top:455px;width:347px;height:61px;border-radius:14px;">
-                <div style="width:165px;height:37px;left:0;top:24px;position:absolute;
-                            background:rgba(217,217,217,0.06);border-radius:14px;"></div>
-                <div style="width:165px;height:37px;left:182px;top:24px;position:absolute;
-                            background:rgba(217,217,217,0.06);border-radius:14px;"></div>
-                <div style="position:absolute;top:0;left:8px;color:white;font-size:13px;font-weight:500;">
-                    Vehicle Make and Model
-                </div>
-                <input type="text" 
-                       placeholder="e.g. Toyota"
-                       style="position:absolute;top:27px;left:14px;width:320px;height:30px;
-                            background:transparent;border:none;outline:none;
-                            color:rgba(177,177,177,0.3); /* always grey by default */
-                            font-size:11px;font-weight:500;font-family:Poppins;
-                            caret-color:white;"
-                       oninput="this.style.color = this.value ? 'white' : 'rgba(177,177,177,0.3)'">
-                <input type="text" 
-                       placeholder="e.g. Vios"
-                       style="position:absolute;top:27px;left:196px;width:140px;height:30px;
-                            background:transparent;border:none;outline:none;
-                            color:rgba(177,177,177,0.3); /* always grey by default */
-                            font-size:11px;font-weight:500;font-family:Poppins;
-                            caret-color:white;"
-                       oninput="this.style.color = this.value ? 'white' : 'rgba(177,177,177,0.3)'">
-            </div>
+<!-- ✅ Vehicle Make and Model -->
+<div style="position:absolute;left:41px;top:455px;width:347px;height:61px;border-radius:14px;">
+    <div style="width:165px;height:37px;left:0;top:24px;position:absolute;
+                background:rgba(217,217,217,0.06);border-radius:14px;"></div>
+    <div style="width:165px;height:37px;left:182px;top:24px;position:absolute;
+                background:rgba(217,217,217,0.06);border-radius:14px;"></div>
+    <div style="position:absolute;top:0;left:8px;color:white;font-size:13px;font-weight:500;">
+        Vehicle Make and Model
+    </div>
+    <input 
+        type="text" 
+        placeholder="e.g. Toyota"
+        value="{{ session('checkout.vehicle.make') ?? '' }}"
+        style="position:absolute;top:27px;left:14px;width:140px;height:30px;
+            background:transparent;border:none;outline:none;
+            color:{{ session('checkout.vehicle.make') ? 'white' : 'rgba(177,177,177,0.3)' }};
+            font-size:11px;font-weight:500;font-family:Poppins;
+            caret-color:white;"
+        oninput="this.style.color = this.value ? 'white' : 'rgba(177,177,177,0.3)'">
+    <input 
+        type="text" 
+        placeholder="e.g. Vios"
+        value="{{ session('checkout.vehicle.model') ?? '' }}"
+        style="position:absolute;top:27px;left:196px;width:140px;height:30px;
+            background:transparent;border:none;outline:none;
+            color:{{ session('checkout.vehicle.model') ? 'white' : 'rgba(177,177,177,0.3)' }};
+            font-size:11px;font-weight:500;font-family:Poppins;
+            caret-color:white;"
+        oninput="this.style.color = this.value ? 'white' : 'rgba(177,177,177,0.3)'">
+</div>
 
-            <!-- ✅ Vehicle Color -->
-            <div style="position:absolute;left:41px;top:530px;width:348px;height:61px;">
-                <div style="width:348px;height:37px;top:24px;position:absolute;
-                            background:rgba(217,217,217,0.06);
-                            border-radius:14px;"></div>
-                <div style="position:absolute;top:0;left:9px;
-                            color:white;font-size:13px;font-weight:500;">
-                    Vehicle Color
-                </div>
+<!-- ✅ Vehicle Color -->
+<div style="position:absolute;left:41px;top:530px;width:348px;height:61px;">
+    <div style="width:348px;height:37px;top:24px;position:absolute;
+                background:rgba(217,217,217,0.06);
+                border-radius:14px;"></div>
+    <div style="position:absolute;top:0;left:9px;
+                color:white;font-size:13px;font-weight:500;">
+        Vehicle Color
+    </div>
 
-                <select id="vehicleColor"
-                        style="position:absolute;top:24px;left:0;width:348px;height:37px;
-                            background:rgba(50, 59, 83, 0.04);
-                            border:none;outline:none;
-                            border-radius:14px;
-                            padding:0 14px;
-                            color:rgba(177, 177, 177, 0.15);
-                            font-size:11px;font-weight:500;
-                            font-family:Poppins;
-                            transition:all 0.25s ease;
-                            cursor:pointer;"
-                        onblur="this.style.boxShadow='none'">
-                        <option value="" disabled selected hidden>e.g. Red</option>
-                        <option value="Red">Red</option>
-                        <option value="Blue">Blue</option>
-                        <option value="Green">Green</option>
-                        <option value="Yellow">Yellow</option>
-                        <option value="Orange">Orange</option>
-                        <option value="Brown">Brown</option>
-                        <option value="White">White</option>
-                        <option value="Silver">Silver</option>
-                        <option value="Black">Black</option>
-                </select>
-            </div>
+    <select id="vehicleColor"
+        style="position:absolute;top:24px;left:0;width:348px;height:37px;
+            background:rgba(50, 59, 83, 0.04);
+            border:none;outline:none;
+            border-radius:14px;
+            padding:0 14px;
+            color:{{ session('checkout.vehicle.color') ? 'white' : 'rgba(177, 177, 177, 0.15)' }};
+            font-size:11px;font-weight:500;
+            font-family:Poppins;
+            transition:all 0.25s ease;
+            cursor:pointer;"
+        onblur="this.style.boxShadow='none'">
+        <option value="" disabled {{ !session('checkout.vehicle.color') ? 'selected' : '' }}>e.g. Red</option>
+        <option value="Red" {{ session('checkout.vehicle.color') === 'Red' ? 'selected' : '' }}>Red</option>
+        <option value="Blue" {{ session('checkout.vehicle.color') === 'Blue' ? 'selected' : '' }}>Blue</option>
+        <option value="Green" {{ session('checkout.vehicle.color') === 'Green' ? 'selected' : '' }}>Green</option>
+        <option value="Yellow" {{ session('checkout.vehicle.color') === 'Yellow' ? 'selected' : '' }}>Yellow</option>
+        <option value="Orange" {{ session('checkout.vehicle.color') === 'Orange' ? 'selected' : '' }}>Orange</option>
+        <option value="Brown" {{ session('checkout.vehicle.color') === 'Brown' ? 'selected' : '' }}>Brown</option>
+        <option value="White" {{ session('checkout.vehicle.color') === 'White' ? 'selected' : '' }}>White</option>
+        <option value="Silver" {{ session('checkout.vehicle.color') === 'Silver' ? 'selected' : '' }}>Silver</option>
+        <option value="Black" {{ session('checkout.vehicle.color') === 'Black' ? 'selected' : '' }}>Black</option>
+    </select>
+</div>
+
 
             <!-- Confirm Button -->
             <div id="confirmButton"
@@ -357,38 +367,6 @@
             });
         </script>
 
-        <script>
-            // Watch all input fields
-            const inputs = document.querySelectorAll('input[type="text"]');
-            const confirmBtn = document.getElementById('confirmButton');
-            const confirmText = document.getElementById('confirmBtnText');
-
-            function checkInputs() {
-                // Check if all inputs have a value
-                const allFilled = Array.from(inputs).every(input => input.value.trim() !== "");
-
-                if (allFilled) {
-                    // Enable confirm button
-                    confirmBtn.style.background = "#760000";
-                    confirmBtn.style.cursor = "pointer";
-                    confirmText.style.opacity = "1";
-
-                    // Add click behavior (change to route if you want)
-                    confirmBtn.onclick = () => {
-                        window.location.href = "{{ route('checkout.payment') }}";
-                    };
-                } else {
-                    // Disable confirm button
-                    confirmBtn.style.background = "#4B5563";
-                    confirmBtn.style.cursor = "not-allowed";
-                    confirmText.style.opacity = "0.5";
-                    confirmBtn.onclick = null; // disable click
-                }
-            }
-
-            // Trigger on each input change
-            inputs.forEach(input => input.addEventListener('input', checkInputs));
-        </script>
 
         <script>
             function handleSelectColor(selectId) {
@@ -417,6 +395,72 @@
                 handleSelectColor("vehicleColor");
             });
         </script>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const confirmBtn = document.getElementById('confirmButton');
+            const confirmText = document.getElementById('confirmBtnText');
+
+            // Required fields
+            const licensePlate = document.getElementById('licensePlate');
+            const vehicleType = document.getElementById('vehicleType');
+            const makeInput = document.querySelector('input[placeholder="e.g. Toyota"]');
+            const modelInput = document.querySelector('input[placeholder="e.g. Vios"]');
+
+            const vehicleColor = document.getElementById('vehicleColor');
+
+            function checkAllInputs() {
+                const license = licensePlate.value.trim();
+                const type = vehicleType.value.trim();
+                const makeFilled = makeInput.value.trim() !== "" && modelInput.value.trim() !== "";
+
+                const color = vehicleColor.value.trim();
+
+                if (license && type && makeFilled && color) {
+                    confirmBtn.style.background = "#760000";
+                    confirmBtn.style.cursor = "pointer";
+                    confirmText.style.opacity = "1";
+
+                    confirmBtn.onclick = () => {
+                        fetch("{{ route('user.checkout.vehicledetails.store', ['username' => strtolower(Auth::user()->name)]) }}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                            },
+                            body: JSON.stringify({
+                            license_plate: license,
+                            vehicle_type: type,
+                            make: makeInput.value.trim(),
+                            model: modelInput.value.trim(),
+                            color: color
+                        })
+
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.href = "{{ route('user.checkout.payment', ['username' => strtolower(Auth::user()->name)]) }}";
+                            }
+                        });
+                    };
+                } else {
+                    confirmBtn.style.background = "#4B5563";
+                    confirmBtn.style.cursor = "not-allowed";
+                    confirmText.style.opacity = "0.5";
+                    confirmBtn.onclick = null;
+                }
+            }
+
+            [licensePlate, vehicleType, vehicleColor, makeInput, modelInput].forEach(el => {
+                el.addEventListener('input', checkAllInputs);
+                el.addEventListener('change', checkAllInputs);
+            });
+
+            checkAllInputs();
+        });
+        </script>
+
 
         <!--------------------------------------------------------------------------
         | LOGOUT

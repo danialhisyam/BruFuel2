@@ -200,7 +200,7 @@
         <div style="width:123px;height:26px;left:27px;top:267px;position:absolute;display:flex;justify-content:center;align-items:center;color:white;font-size:15px;font-weight:600;">Delivery Status</div>
         <div style="width:389px;height:143px;left:20px;top:301px;position:absolute;background:rgba(217,217,217,0.10);border-radius:15px;"></div>
         <img style="width:330px;height:73px;left:50px;top:337px;position:absolute;" src="{{ asset('dimages/emptyorder.png') }}">
-        <button onclick="window.location.href='{{ route('checkout.fuel') }}'"
+        <button onclick="window.location.href='{{ route('user.checkout.fuel', ['username' => strtolower(Auth::user()->name)]) }}'"
             style="border:none;background:none;padding:0;position:absolute;left:124px;top:426.84px;cursor:pointer;">
             <div class="w-48 h-9 bg-[#760000] rounded-[33px] flex justify-center items-center"
                 style="transition:transform 0.15s ease;"
