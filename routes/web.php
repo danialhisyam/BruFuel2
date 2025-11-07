@@ -191,6 +191,9 @@ Route::group([
             Route::get('/reset', [\App\Http\Controllers\CheckoutController::class, 'reset'])
             ->name('user.checkout.reset');
 
+                // 🆕 ADD THIS BELOW RESET:
+            Route::post('/confirm', [\App\Http\Controllers\CheckoutController::class, 'confirm'])
+            ->name('user.checkout.confirm');
         
             Route::post('/fuel', [\App\Http\Controllers\CheckoutController::class, 'fuelStore'])
             ->name('user.checkout.fuel.store');
@@ -199,12 +202,13 @@ Route::group([
             // ✅ Save vehicle details (license plate + brand/model)
             Route::post('/vehicledetails', [App\Http\Controllers\CheckoutController::class, 'vehicleStore'])
            ->name('user.checkout.vehicledetails.store');
+           Route::post('/confirm', [\App\Http\Controllers\CheckoutController::class, 'confirm'])
+           ->name('user.checkout.confirm');
 
             Route::get('/fuel', fn() => view('logged.checkout.fuel'))->name('user.checkout.fuel');
             Route::get('/vehicledetails', fn() => view('logged.checkout.vehicledetails'))->name('user.checkout.vehicledetails');
             Route::get('/location', fn() => view('logged.checkout.location'))->name('user.checkout.location');
             Route::get('/payment', fn() => view('logged.checkout.payment'))->name('user.checkout.payment');
-            Route::get('/confirm', fn() => view('logged.checkout.confirm'))->name('user.checkout.confirm');
             Route::get('/success', fn() => view('logged.checkout.success'))->name('user.checkout.success');
         });
     });
@@ -245,6 +249,19 @@ Route::get('/debug-auth', function () {
 
 /*
 |--------------------------------------------------------------------------
+| SESSION RESET (HIDDEN KILLER)
+|--------------------------------------------------------------------------
+*/
+use Illuminate\Support\Facades\Session;
+
+Route::post('/reset-session', function () {
+    Session::forget('checkout');
+    return redirect()->back()->with('success', 'Checkout session cleared!');
+})->name('user.session.reset');
+
+
+/*
+|--------------------------------------------------------------------------
 | DISABLE CACHE AFTER LOGOUT
 |--------------------------------------------------------------------------
 */
@@ -255,4 +272,8 @@ Route::middleware('auth')->group(function () {
             ->header('Pragma', 'no-cache')
             ->header('Expires', 'Fri, 01 Jan 1990 00:00:00 GMT');
     });
+});
+
+Route::get('/debug-session', function () {
+    return session('checkout', 'No checkout session found');
 });

@@ -744,16 +744,48 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.style.pointerEvents = "auto";
         }
     });
+ 
+        const continueBtn = popup.querySelector("div[style*='cursor:pointer']");
+        continueBtn.addEventListener("click", () => {
+            const amountSelect = document.getElementById("fuelAmount");
+            const ellipse3 = document.getElementById("ellipse3");
+            const senderInput = document.querySelector('input[placeholder="Muhammad Ali"]');
 
-    // ✅ "CONTINUE" button inside popup → redirect home
-    const continueBtn = popup.querySelector("div[style*='cursor:pointer']");
-    continueBtn.addEventListener("click", () => {
-        overlay.style.opacity = "0";
-        overlay.style.pointerEvents = "none";
-        window.location.href = "{{ route('user.home', ['username' => Auth::user()->name]) }}";
-    });
-});
-</script>
+            const selectedAmount = parseFloat(amountSelect?.value || 0);
+            const currentPaymentMethod = ellipse3.style.top === "655px" ? "Cash" : "Credit Card";
+            const senderName = senderInput?.value?.trim() || "{{ Auth::user()->name }}";
+
+            fetch("{{ route('user.checkout.confirm', ['username' => Auth::user()->name]) }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                },
+                body: JSON.stringify({
+                    fuel_amount: selectedAmount,
+                    payment_method: currentPaymentMethod,
+                    sender_name: senderName,
+                }),
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Server responded with " + res.status);
+                return res.text();
+            })
+            .then(() => {
+                overlay.style.opacity = "0";
+                overlay.style.pointerEvents = "none";
+                // ✅ Small delay to let popup fade out nicely
+                setTimeout(() => {
+                    window.location.href = "{{ route('user.home', ['username' => Auth::user()->name]) }}";
+                }, 300);
+            })
+            .catch(err => {
+                console.error("Checkout confirm failed:", err);
+                alert("Something went wrong. Please try again.");
+            });
+        });
+        });
+         </script>
 
             </div> <!-- close slideWrapper -->
 
@@ -809,15 +841,15 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>           
 
           <div style="left:35px;top:232px;position:absolute;color:#F4E5E5;font-size:10px;">Ref Number</div>
-            <div style="left:35px;top:257px;position:absolute;color:#F4E5E5;font-size:10px;">Payment Method</div>
-            <div style="left:35px;top:307px;position:absolute;color:#F4E5E5;font-size:10px;">Sender Name</div>
-            <div style="left:35px;top:281px;position:absolute;color:#F4E5E5;font-size:10px;">Payment Time</div>
-            <div style="left:35px;top:391px;position:absolute;color:#F4E5E5;font-size:20px;font-weight:700;">Total Payment</div>
+          <div style="left:35px;top:257px;position:absolute;color:#F4E5E5;font-size:10px;">Payment Method</div>
+          <div style="left:35px;top:307px;position:absolute;color:#F4E5E5;font-size:10px;">Sender Name</div>
+          <div style="left:35px;top:281px;position:absolute;color:#F4E5E5;font-size:10px;">Payment Time</div>
+          <div style="left:35px;top:391px;position:absolute;color:#F4E5E5;font-size:20px;font-weight:700;">Total Payment</div>
             
-            <div style="right:35px;top:232px;position:absolute;text-align:right;color:#F4E5E5;font-size:10px;min-width:100px;">00000001</div>
-            <div style="right:35px;top:257px;position:absolute;text-align:right;color:#F4E5E5;font-size:10px;min-width:100px;">Credit Card</div>
-            <div style="right:35px;top:281px;position:absolute;text-align:right;color:#F4E5E5;font-size:10px;min-width:100px;">12:02:58</div>
-            <div style="right:35px;top:306px;position:absolute;text-align:right;color:#F4E5E5;font-size:10px;min-width:100px;">Mohammad Ali</div>
+        <div style="right:35px;top:232px;position:absolute;text-align:right;color:#F4E5E5;font-size:10px;min-width:100px;">00000001</div>
+        <div style="right:35px;top:257px;position:absolute;text-align:right;color:#F4E5E5;font-size:10px;min-width:100px;">Credit Card</div>
+        <div style="right:35px;top:281px;position:absolute;text-align:right;color:#F4E5E5;font-size:10px;min-width:100px;">12:02:58</div>
+        <div style="right:35px;top:306px;position:absolute;text-align:right;color:#F4E5E5;font-size:10px;min-width:100px;">Mohammad Ali</div>
             
             <div id="popupTotal"
                 style="left:267px;top:391px;position:absolute;color:#F4E5E5;font-size:20px;font-weight:700;">B$0</div>

@@ -257,19 +257,21 @@
         <img src="{{ asset('mimages/CCS.png') }}" alt="icon" width="20" height="20" style="position:absolute;left:20px;top:13px;">
         </div>
 
-        <!-- Report -->
-        <div style="position:absolute;left:24px;top:560px;cursor:pointer;transition:transform 0.15s ease;"
-        onmousedown="this.style.transform='scale(1.03)'"
-        onmouseup="this.style.transform='scale(1)'"
-        onmouseleave="this.style.transform='scale(1)'"
-        ontouchstart="this.style.transform='scale(1.03)'"
-        ontouchend="this.style.transform='scale(1)'">
-        <div class="Rectangle51" style="width:383px;height:47px;background:rgba(217,217,217,0.13);border-radius:15px;"></div>
-        <div class="Report" style="position:absolute;left:60px;top:13px;color:white;font-size:15px;font-family:Poppins;font-weight:600;">Report</div>
-        <img src="{{ asset('mimages/report.png') }}" alt="icon" width="20" height="20" style="position:absolute;left:20px;top:13px;">
-        </div>
+        <!-- 🧹 Report (Session Killer) -->
+        <form action="{{ route('user.session.reset') }}" method="POST"
+            style="position:absolute;left:24px;top:560px;cursor:pointer;transition:transform 0.15s ease;">
+            @csrf
+            <button type="submit"
+                style="all:unset;display:block;width:383px;height:47px;position:relative;cursor:pointer;">
+                <div style="width:383px;height:47px;background:rgba(217,217,217,0.13);border-radius:15px;"></div>
+                <div style="position:absolute;left:60px;top:13px;color:white;font-size:15px;
+                            font-family:Poppins;font-weight:600;">Report</div>
+                <img src="{{ asset('mimages/report.png') }}" alt="icon"
+                    width="20" height="20"
+                    style="position:absolute;left:20px;top:13px;">
+            </button>
+        </form>
 
-    </div>
 
     <!--------------------------------------------------------------------------
     | LOGOUT

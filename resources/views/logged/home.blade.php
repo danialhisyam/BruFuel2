@@ -8,6 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;650;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <style>
         * { user-select: none; -webkit-user-drag: none; user-drag: none; }
         html, body {
@@ -196,20 +199,85 @@
             ontouchend="this.style.transform='scale(1)'"
             onclick="window.location.href='{{ route('user.home', ['username' => Auth::user()->name]) }}'">
 
-        <!-- Delivery Status -->
-        <div style="width:123px;height:26px;left:27px;top:267px;position:absolute;display:flex;justify-content:center;align-items:center;color:white;font-size:15px;font-weight:600;">Delivery Status</div>
-        <div style="width:389px;height:143px;left:20px;top:301px;position:absolute;background:rgba(217,217,217,0.10);border-radius:15px;"></div>
-        <img style="width:330px;height:73px;left:50px;top:337px;position:absolute;" src="{{ asset('dimages/emptyorder.png') }}">
-        <button onclick="window.location.href='{{ route('user.checkout.fuel', ['username' => strtolower(Auth::user()->name)]) }}'"
-            style="border:none;background:none;padding:0;position:absolute;left:124px;top:426.84px;cursor:pointer;">
-            <div class="w-48 h-9 bg-[#760000] rounded-[33px] flex justify-center items-center"
-                style="transition:transform 0.15s ease;"
-                onmousedown="this.style.transform='scale(1.1)'" onmouseup="this.style.transform='scale(1)'"
-                onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
-                ontouchend="this.style.transform='scale(1)'">
-                <span class="text-white text-base font-semibold font-[Poppins]">ORDER FUEL NOW</span>
+        <!-- 🧭 Delivery Status Section -->
+        @php
+            $isActive = session('checkout.active') ?? false;
+            $fuel = session('checkout.fuel.fuel_type') ?? 'N/A';
+            $amount = session('checkout.payment.amount') ?? 0;
+            $location = session('checkout.location.address') ?? 'No location selected';
+            $userName = Auth::user()->name;
+        @endphp
+
+        <div style="width:123px;height:26px;left:27px;top:267px;position:absolute;
+                    display:flex;justify-content:center;align-items:center;
+                    color:white;font-size:15px;font-weight:600;">
+            Delivery Status
+        </div>
+
+        @if ($isActive)
+            <!-- 🚚 Active Delivery Card -->
+            <div style="width:389px;height:143px;left:20px;top:301px;position:absolute;
+                        background:rgba(217,217,217,0.10);border-radius:15px;"></div>
+
+            <!-- Map preview -->
+            <div id="deliveryMap"
+            style="width:179px;height:123px;left:30px;top:310px;position:absolute;border-radius:6px;z-index:1;">
             </div>
-        </button>
+
+            <!-- Status text -->
+            <div style="width:168px;height:24px;left:220px;top:320px;position:absolute;
+                        color:rgba(255,255,255,0.38);font-size:10px;font-weight:700;
+                        text-align:center;">
+                Your fuel is on the way, {{ $userName }}!
+            </div>
+
+            <!-- Contact Driver button -->
+            <a href="https://wa.me/6737201634?text={{ urlencode('Hello, I’m contacting you from BruFuel regarding my delivery order.') }}" 
+            target="_blank" 
+            style="text-decoration:none;">
+                <div style="width:180px;height:27px;left:220px;top:405px;position:absolute;
+                            background:#760000;border-radius:6px;
+                            display:flex;align-items:center;justify-content:center;
+                            color:white;font-size:12px;font-weight:600;
+                            transition:transform 0.15s ease;cursor:pointer;"
+                    onmousedown="this.style.transform='scale(1.05)'"
+                    onmouseup="this.style.transform='scale(1)'"
+                    onmouseleave="this.style.transform='scale(1)'">
+                    CONTACT DRIVER
+                </div>
+            </a>
+
+
+            <!-- Info labels -->
+            <div style="width:74px;left:223px;top:345px;position:absolute;
+                        color:white;font-size:7px;line-height:10.5px;">
+                Estimation time:<br>Fuel Type:<br>Requested Amount:<br>Delivery Location:
+            </div>
+
+            <div style="width:87px;left:305px;top:345px;position:absolute;
+                        color:#FFE100;font-size:7px;line-height:10.5px;
+                        text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                20 mins<br>{{ $fuel }}<br>B${{ $amount }}<br><span style="display:inline-block;max-width:87px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $location }}</span>
+            </div>
+
+        @else
+            <!-- 💤 No active delivery -->
+            <div style="width:389px;height:143px;left:20px;top:301px;position:absolute;
+                        background:rgba(217,217,217,0.10);border-radius:15px;"></div>
+            <img style="width:330px;height:73px;left:50px;top:337px;position:absolute;"
+                src="{{ asset('dimages/emptyorder.png') }}">
+            <button onclick="window.location.href='{{ route('user.checkout.fuel', ['username' => strtolower(Auth::user()->name)]) }}'"
+                style="border:none;background:none;padding:0;position:absolute;left:124px;top:426.84px;cursor:pointer;">
+                <div class="w-48 h-9 bg-[#760000] rounded-[33px] flex justify-center items-center"
+                    style="transition:transform 0.15s ease;"
+                    onmousedown="this.style.transform='scale(1.1)'" onmouseup="this.style.transform='scale(1)'"
+                    onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
+                    ontouchend="this.style.transform='scale(1)'">
+                    <span class="text-white text-base font-semibold font-[Poppins]">ORDER FUEL NOW</span>
+                </div>
+            </button>
+        @endif
+
 
         <!-- Your vehicles -->
         <div style="width:168px;height:24px;left:30px;top:477.91px;position:absolute;display:flex;align-items:center;color:white;font-size:15px;font-weight:600;">Your vehicles</div>
@@ -257,6 +325,45 @@
             ontouchend="this.style.transform='scale(1)'"
             onclick="window.location.href='{{ route('user.menu', ['username' => Auth::user()->name]) }}'">
     </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Coordinates fallback in case geocoding fails
+        let defaultCoords = [4.5353, 114.7277]; // somewhere in Brunei
+        let address = @json($location);
+
+        // Initialize the map
+        const map = L.map('deliveryMap', {
+            zoomControl: false,
+            attributionControl: false,
+            dragging: false,
+            scrollWheelZoom: false,
+            doubleClickZoom: false,
+            boxZoom: false,
+            keyboard: false
+        }).setView(defaultCoords, 13);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+
+        // Try to geocode address → get coordinates
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    const lat = parseFloat(data[0].lat);
+                    const lon = parseFloat(data[0].lon);
+                    map.setView([lat, lon], 14);
+                    L.marker([lat, lon]).addTo(map);
+                } else {
+                    console.warn("Geocode failed for address:", address);
+                }
+            })
+            .catch(err => console.error("Geocode error:", err));
+    });
+    </script>
 
     <!--------------------------------------------------------------------------
     | LOGOUT

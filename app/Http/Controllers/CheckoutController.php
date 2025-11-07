@@ -10,7 +10,6 @@ class CheckoutController extends Controller
      * ✅ Store selected fuel in session
      * Handles redirect logic depending on where user came from.
      */
-
     public function fuelStore(Request $request)
     {
         $request->validate([
@@ -22,9 +21,7 @@ class CheckoutController extends Controller
             'fuel_type' => $request->fuel_type,
         ]]);
 
-        // ✅ Determine where to redirect next
-        // If coming from payment, return there — otherwise go to location
-            logger('Fuel stored:', session('checkout.fuel'));
+        logger('Fuel stored:', session('checkout.fuel'));
 
         $redirect = $request->query('redirect_back') ?? $request->redirect_back ?? 'location';
 
@@ -33,13 +30,15 @@ class CheckoutController extends Controller
         ]);
     }
 
+    /**
+     * ✅ Save location
+     */
     public function locationStore(Request $request)
     {
         $request->validate([
             'address' => 'required|string|max:255',
         ]);
 
-        // ✅ Save location to session
         session(['checkout.location' => [
             'address' => $request->address,
         ]]);
@@ -47,16 +46,9 @@ class CheckoutController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function reset(Request $request)
-    {
-        // Clear only checkout-related data
-        $request->session()->forget('checkout');
-
-        return redirect()->route('user.home', [
-            'username' => strtolower(auth()->user()->name),
-        ]);
-    }
-
+    /**
+     * ✅ Save vehicle details
+     */
     public function vehicleStore(Request $request)
     {
         $request->validate([
@@ -67,7 +59,6 @@ class CheckoutController extends Controller
             'color' => 'nullable|string|max:50',
         ]);
 
-        // ✅ Preserve previous data if user changes only one field
         $current = session('checkout.vehicle', []);
 
         session(['checkout.vehicle' => array_merge($current, array_filter([
@@ -79,9 +70,43 @@ class CheckoutController extends Controller
         ]))]);
 
         return response()->json(['success' => true]);
-}
-
     }
 
+    /**
+     * ✅ Final confirmation — Save payment details and complete session
+     */
+    public function confirm(Request $request)
+    {
+        $checkout = session('checkout', []);
 
+        $checkout['payment'] = [
+            'amount'      => $request->input('fuel_amount', $checkout['payment']['amount'] ?? null),
+            'method'      => $request->input('payment_method', 'Credit Card'),
+            'ref_number'  => rand(10000000, 99999999),
+            'timestamp'   => now()->format('H:i:s'),
+            'sender'      => $request->input('sender_name', auth()->user()->name),
+        ];
 
+        $checkout['active'] = true;
+
+        session(['checkout' => $checkout]);
+
+        logger('Checkout confirmed:', session('checkout'));
+
+        return redirect()->route('user.home', [
+            'username' => strtolower(auth()->user()->name),
+        ]);
+    }
+
+    /**
+     * ✅ Reset checkout session manually
+     */
+    public function reset(Request $request)
+    {
+        $request->session()->forget('checkout');
+
+        return redirect()->route('user.home', [
+            'username' => strtolower(auth()->user()->name),
+        ]);
+    }
+}
