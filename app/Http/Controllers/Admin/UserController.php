@@ -47,7 +47,6 @@ class UserController extends Controller
 
         return response()->json($payload);
     }
-<<<<<<< HEAD
 
     /**
      * Return count of users for stats endpoint
@@ -60,6 +59,3 @@ class UserController extends Controller
 }
 
 
-=======
-}
->>>>>>> origin/master

@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BruFuel - Driver Dashboard</title>
 
-  <!-- Tailwind CDN (no Vite needed) -->
+  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/feather-icons"></script>
+
   <style>
     :root { color-scheme: dark; }
     body { background:#0b1220; }
@@ -74,6 +75,17 @@
       </div>
     </div>
   </main>
+
+ <!-- Floating Message Admin Button (Slightly Higher) -->
+<a href="{{ url('/testing/driver') }}"
+   class="fixed bottom-16 right-6 z-50 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-lg transition-all duration-300 hover:scale-105">
+  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M8 10h8m-8 4h5m-9 6h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+  </svg>
+  Message Admin
+</a>
+
 
   <!-- Footer -->
   <footer class="text-center py-6 border-t border-gray-800 bg-[#0f1625] text-gray-500 text-sm">

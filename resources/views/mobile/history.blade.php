@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>BruFuel Dashboard</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;650;700&display=swap" rel="stylesheet">
@@ -58,14 +57,14 @@
       style="width:192px;height:52px;left:20px;top:78px;position:absolute;cursor:pointer;transition:transform 0.15s ease;"
       onmousedown="this.style.transform='scale(1.1)'" onmouseup="this.style.transform='scale(1)'"
       onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
-      ontouchend="this.style.transform='scale(1)'" onclick="window.location.href='{{ route('mobile.home') }}'">
+      ontouchend="this.style.transform='scale(1)'" onclick="window.location.href='{{ route('home') }}'">
 
     <!-- Login button -->
     <img src="{{ asset('dimages/loginbutton.png') }}" alt="Login Button" draggable="false"
-      style="width:30px;height:35px;left:371.85px;top:89.97px;position:absolute;cursor:pointer;transition:transform 0.15s ease;"
-      onmousedown="this.style.transform='scale(1.1)'" onmouseup="this.style.transform='scale(1)'"
-      onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
-      ontouchend="this.style.transform='scale(1)'">
+        style="width:30px;height:35px;left:371.85px;top:89.97px;position:absolute;cursor:pointer;transition:transform 0.15s ease;"
+        onmousedown="this.style.transform='scale(1.1)'" onmouseup="this.style.transform='scale(1)'"
+        onmouseleave="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(1.1)'"
+        ontouchend="this.style.transform='scale(1)'" onclick="window.location.href='{{ route('signup') }}'">>
 
     <!--------------------------------------------------------------------------
     | TABS

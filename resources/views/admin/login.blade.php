@@ -38,7 +38,7 @@
     <!-- Header -->
     <div class="text-center mb-8">
       <div class="mx-auto w-20 h-20 bg-black-100 rounded-full flex items-center justify-center mb-4">
-        <img src="/AdminPics/whiteshell.png" class="w-20 h-20" alt="Shell Icon">
+        <img src="{{ asset('images/Logook.png') }}" class="w-20 h-20" alt="BruFuel Logo">
       </div>
       <h1 class="text-3xl font-bold text-white">BruFuel</h1>
       <p class="text-gray-300 mt-2">Sign In to your Admin Account</p>

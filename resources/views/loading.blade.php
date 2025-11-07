@@ -88,7 +88,7 @@
   <div class="overlay"></div>
 
   <div class="content">
-    <img src="{{ asset('images/logook.jpg') }}" alt="BruFuel Logo" class="logo">
+    <img src="{{ asset('images/Logook.png') }}" alt="BruFuel Logo" class="logo">
     <h1>Welcome to BruFuel</h1>
     <p>We Deliver At All Cost</p>
   </div>

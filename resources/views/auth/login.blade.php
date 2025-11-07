@@ -22,7 +22,7 @@
 
     <!-- Header -->
     <div class="text-center mb-8">
-      <img src="{{ asset('images/logook.jpg') }}" class="mx-auto w-24 h-24 object-contain mb-4" alt="BruFuel Logo">
+      <img src="{{ asset('images/Logook.png') }}" class="mx-auto w-24 h-24 object-contain mb-4" alt="BruFuel Logo">
       <h1 class="text-3xl font-bold text-white">BruFuel</h1>
       <p class="text-gray-300 mt-2">Sign in to your account</p>
     </div>

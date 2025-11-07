@@ -22,14 +22,15 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\DriverController as AdminDriverController;
-<<<<<<< HEAD
 use App\Http\Controllers\Admin\OrderController;   // make sure this file exists
-=======
->>>>>>> origin/master
 
 // Driver controllers
 use App\Http\Controllers\Driver\AuthController as DriverAuthController;
 use App\Http\Controllers\Driver\TransactionController as DriverTransactionController;
+use App\Http\Controllers\Driver\TripController as DriverTripController;
+
+// Checkout controller
+use App\Http\Controllers\CheckoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +64,34 @@ if (Features::enabled(Features::registration())) {
 */
 Route::middleware('guest')->group(function () {
     Route::get('/login', fn () => view('auth.login'))->name('login');
+    
+    // Mobile login route (accessible to guests)
+    Route::view('/mobile/login', 'mobile.login2')->name('mobile.login');
+    
+    // Mobile signup route (accessible to guests)
+    Route::view('/signup', 'mobile.signup')->name('signup');
+    
+    // Mobile signup POST handler
+    Route::post('/signup', function (Request $request) {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|confirmed|min:8',
+        ]);
+
+        $user = \App\Models\User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $user->assignRole('customer');
+
+        // Auto-login the user after signup
+        Auth::login($user);
+        
+        return redirect()->route('mobile.home')->with('status', 'Account created successfully!');
+    })->name('signup.post');
 
     if (Features::enabled(Features::registration())) {
         Route::get('/register', fn () => view('auth.register'))->name('register');
@@ -143,7 +172,6 @@ Route::middleware(['auth', 'role:admin'])
 
         // Drivers (full RESTful resource)
         Route::resource('drivers', AdminDriverController::class);
-<<<<<<< HEAD
 
         // Stats (JSON) – handy if you want AJAX/Alpine later
     Route::get('/stats/users',   [UserController::class, 'count'])->name('stats.users');
@@ -158,10 +186,6 @@ Route::middleware(['auth', 'role:admin'])
 
 
     
-=======
-    });
-
->>>>>>> origin/master
 /*
 |--------------------------------------------------------------------------
 | Driver
@@ -186,7 +210,12 @@ Route::middleware(['auth', 'role:driver'])
     ->name('driver.')
     ->group(function () {
         Route::view('/dashboard', 'driver.dashboard')->name('dashboard');
-        Route::view('/trips', 'driver.trips.index')->name('trips');
+        
+        // Trips via controller
+        Route::get('/trips', [DriverTripController::class, 'index'])->name('trips');
+        Route::post('/trips/{order}/accept', [DriverTripController::class, 'accept'])->name('trips.accept');
+        Route::post('/trips/{order}/decline', [DriverTripController::class, 'decline'])->name('trips.decline');
+        Route::post('/trips/{order}/status', [DriverTripController::class, 'updateStatus'])->name('trips.status');
         
         // Transactions via controller (index + optional download)
         Route::get('/transactions', [DriverTransactionController::class, 'index'])->name('transactions');
@@ -206,10 +235,16 @@ Route::middleware(['auth', 'role:customer'])
         Route::view('/home',       'mobile.home')->name('home');
         Route::view('/dashboard',  'mobile.dashboard')->name('dashboard');
         Route::view('/history',    'mobile.history')->name('history');
-        Route::view('/login',      'mobile.login')->name('login');
         Route::view('/menu',       'mobile.menu')->name('menu');
-        Route::view('/signup',     'mobile.signup')->name('signup');
         Route::view('/welcome',    'mobile.welcome')->name('welcome');
+        
+        // Checkout routes
+        Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+        Route::post('/checkout/fuel', [CheckoutController::class, 'fuelStore'])->name('checkout.fuel');
+        Route::post('/checkout/location', [CheckoutController::class, 'locationStore'])->name('checkout.location');
+        Route::post('/checkout/vehicle', [CheckoutController::class, 'vehicleStore'])->name('checkout.vehicle');
+        Route::post('/checkout/confirm', [CheckoutController::class, 'confirm'])->name('checkout.confirm');
+        Route::post('/checkout/reset', [CheckoutController::class, 'reset'])->name('checkout.reset');
     });
 
 /*
@@ -281,4 +316,8 @@ Route::get('/debug-auth', function () {
         'authenticated' => Auth::check(),
         'user' => Auth::user(),
     ];
+});
+
+Route::get('/debug-session', function () {
+    return session('checkout', 'No checkout session found');
 });

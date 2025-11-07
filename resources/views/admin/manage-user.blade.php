@@ -27,7 +27,7 @@
   <aside class="sidebar w-64 shrink-0 border-r border-slate-800 flex flex-col">
     <div class="flex items-center gap-3 px-5 py-5">
       <div class="grid h-12 w-12 place-items-center rounded-xl bg-white/10">
-        <img src="/AdminPics/whiteshell.png" class="h-11 w-12" alt="Shell Icon">
+        <img src="{{ asset('images/Logook.png') }}" class="h-11 w-12" alt="BruFuel Logo">
       </div>
       <div>
         <p class="text-lg font-semibold">BruFuel</p>

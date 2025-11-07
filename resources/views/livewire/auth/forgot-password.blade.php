@@ -3,7 +3,7 @@
 
     <!-- ✅ Logo -->
     <div class="flex justify-center mb-5">
-      <img src="{{ asset('images/Logook.jpg') }}" alt="BruFuel Logo" class="w-20 h-20 rounded-full">
+      <img src="{{ asset('images/Logook.png') }}" alt="BruFuel Logo" class="w-20 h-20 rounded-full">
     </div>
 
     <!-- ✅ Title -->

@@ -70,7 +70,7 @@
     <div style="width:123px;height:26px;left:27px;top:267px;position:absolute;display:flex;justify-content:center;align-items:center;color:white;font-size:15px;font-weight:600;">Delivery Status</div>
     <div style="width:389px;height:143px;left:20px;top:301px;position:absolute;background:rgba(217,217,217,0.10);border-radius:15px;"></div>
     <img style="width:330px;height:73px;left:50px;top:337px;position:absolute;" src="{{ asset('dimages/emptyorder.png') }}">
-    <button onclick="toggleLoginPopup(true)"
+    <button onclick="window.location.href='{{ route('mobile.checkout') }}'"
         style="border:none;background:none;padding:0;position:absolute;left:124px;top:426.84px;cursor:pointer;">
         <div class="w-48 h-9 bg-[#760000] rounded-[33px] flex justify-center items-center"
             style="transition:transform 0.15s ease;"
@@ -137,7 +137,7 @@
             <p class="text-white/60 text-xs font-normal font-[Poppins] mt-2 leading-snug">
                 Uh-oh! It looks like you're not logged in to proceed with this action.
                 Log in or sign up to access all available features.
-            </p>
+            </p>a
         </div>
         <div class="w-56 h-10 bg-[#760000] rounded-[33px] flex justify-center items-center cursor-pointer hover:scale-[1.03] transition"
             onclick="window.location.href='{{ route('login') }}'">

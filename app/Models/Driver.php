@@ -11,6 +11,7 @@ class Driver extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'driver_code',
         'name',
         'email',
@@ -19,6 +20,14 @@ class Driver extends Model
         'license_expiry',
         'status',
     ];
+
+    /**
+     * Relationship to User
+     */
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
+    }
 
     // Auto-generate DRV-001, DRV-002... if not provided
     protected static function booted(): void

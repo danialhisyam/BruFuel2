@@ -21,7 +21,7 @@
   <aside class="sidebar w-64 shrink-0 border-r border-slate-800 flex flex-col">
     <div class="flex items-center gap-3 px-5 py-5">
       <div class="grid h-12 w-12 place-items-center rounded-xl bg-white/5">
-        <img src="/AdminPics/whiteshell.png" class="h-11 w-12" alt="Shell Icon">
+        <img src="{{ asset('images/Logook.png') }}" class="h-11 w-12" alt="BruFuel Logo">
       </div>
       <div>
         <p class="text-lg font-semibold">BruFuel</p>
@@ -31,11 +31,11 @@
 
     <nav class="px-3">
       <ul class="space-y-1">
-        <li><a class="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-300 hover:bg-white/5" href="/admin/dashboard"><span class="inline-block h-1.5 w-1.5 rounded-full bg-slate-500"></span>Dashboard</a></li>
+        <li><a class="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-300 hover:bg-white/5" href="{{ route('admin.dashboard') }}"><span class="inline-block h-1.5 w-1.5 rounded-full bg-slate-500"></span>Dashboard</a></li>
         <li><a class="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-300 hover:bg-white/5" href="/admin/orders"><span class="inline-block h-1.5 w-1.5 rounded-full bg-slate-500"></span>Orders</a></li>
         <li><a class="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-300 hover:bg-white/5" href="/admin/users"><span class="inline-block h-1.5 w-1.5 rounded-full bg-slate-500"></span>Users</a></li>
         <li><a class="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-300 hover:bg-white/5" href="/admin/drivers"><span class="inline-block h-1.5 w-1.5 rounded-full bg-slate-500"></span>Drivers</a></li>
-        <li><a class="flex items-center gap-3 rounded-lg px-3 py-2 bg-indigo-500/15 text-white" href="/admin/payments"><span class="inline-block h-1.5 w-1.5 rounded-full bg-indigo-400"></span>Payments</a></li>
+        <li><a class="flex items-center gap-3 rounded-lg px-3 py-2 bg-indigo-500/15 text-white" href="{{ route('admin.payments') }}"><span class="inline-block h-1.5 w-1.5 rounded-full bg-indigo-400"></span>Payments</a></li>
       </ul>
     </nav>
 
