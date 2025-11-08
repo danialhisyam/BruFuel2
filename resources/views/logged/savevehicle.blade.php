@@ -421,9 +421,12 @@
                     confirmBtn.style.background = "#760000";
                     confirmBtn.style.cursor = "pointer";
                     confirmText.style.opacity = "1";
+                    confirmText.textContent = "SAVE";
+
 
                     confirmBtn.onclick = () => {
-                        fetch("{{ route('user.checkout.vehicledetails.store', ['username' => strtolower(Auth::user()->name)]) }}", {
+                        fetch("{{ route('user.vehicles.store', ['username' => strtolower(Auth::user()->name)]) }}", {
+
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
@@ -439,17 +442,21 @@
 
                         })
                         .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                window.location.href = "{{ route('user.checkout.payment', ['username' => strtolower(Auth::user()->name)]) }}";
-                            }
-                        });
+.then(data => {
+    if (data.success) {
+        window.location.href = "{{ route('user.home', ['username' => strtolower(Auth::user()->name)]) }}";
+    } else {
+        alert('Failed to save vehicle. Please try again.');
+    }
+});
+
                     };
                 } else {
                     confirmBtn.style.background = "#4B5563";
                     confirmBtn.style.cursor = "not-allowed";
                     confirmText.style.opacity = "0.5";
-                    confirmBtn.onclick = null;
+                    confirmText.textContent = "CONFIRM DETAILS";
+
                 }
             }
 

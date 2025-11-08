@@ -107,7 +107,7 @@ input[autocomplete="new-password"] {
 | Button Container + Button
 |--------------------------------------------------------------------------
 */
-.button-container{width:100%;display:flex;justify-content:center;align-items:center;position:relative;bottom:200px;}
+.button-container{width:100%;display:flex;justify-content:center;align-items:center;position:relative;bottom:230px;}
 button{width:100%;max-width:310px;height:50px;border:none;border-radius:33px;background:#4B5563;color:#fff;font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;cursor:not-allowed;transition:all .3s ease;position:relative;z-index:5;}
 button.enabled{background:#760000;cursor:pointer;}
 button.enabled:hover{transform:scale(1.03);}
@@ -338,22 +338,6 @@ function checkFormValidity() {
     btn.disabled = !validForm;
   }
 }
-
-// Sync password fields when autofilled
-function syncPasswordFields() {
-  const passwordInput = document.querySelector('input[name="password"]');
-  const confirmInput = document.querySelector('input[name="password_confirmation"]');
-  
-  if (passwordInput && confirmInput && passwordInput.value && !confirmInput.value) {
-    confirmInput.value = passwordInput.value;
-    updateInputColors();
-  }
-}
-
-// Check for autofill periodically
-setInterval(syncPasswordFields, 100);
-setInterval(detectAutofill, 200);
-
 /*
 |--------------------------------------------------------------------------
 | Event Listeners

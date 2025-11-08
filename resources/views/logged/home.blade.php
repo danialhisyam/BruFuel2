@@ -104,7 +104,7 @@
                     style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
                 <div>
                     <div style="font-weight:600;font-size:13px;">{{ Auth::user()->name }}</div>
-                    <div style="font-size:11px;color:#aaa;">{{ Auth::user()->email }}</div>
+                    <div style="font-size:11px;color:#aaa;max-width:130px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" title="{{ Auth::user()->email }}">{{ Auth::user()->email }}</div>
                 </div>
             </div>
 
